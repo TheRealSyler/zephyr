@@ -1,15 +1,20 @@
 import { Configuration } from 'webpack';
-import { resolve } from 'path';
-import HtmlWebpackPlugin = require('html-webpack-plugin');
-// import WebpackBundleAnalyzer = require('webpack-bundle-analyzer');
+import { Configuration as Dev } from 'webpack-dev-server';
+const resolve = require('path').resolve;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const WebpackBundleAnalyzer = require('webpack-bundle-analyzer');
 
-const config: Configuration = {
+interface C extends Dev, Configuration {}
+
+const config: C = {
   entry: {
     index: `${__dirname}/src/index.tsx`
   },
   output: {
     path: resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js'
+    chunkFilename: '[name].chunk.js',
+    filename: '[name].bundle.js',
+    publicPath: '/'
   },
 
   plugins: [
@@ -30,19 +35,26 @@ const config: Configuration = {
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: ['ts-loader'],
         exclude: [/node_modules/]
-      },
-      {
-        test: /\.html$/,
-        exclude: [/node_modules/, /public/],
-        use: ['html-loader']
       }
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.html']
+    extensions: ['.tsx', '.ts', '.js']
+  },
+  devServer: {
+    historyApiFallback: true,
+    allowedHosts: ['localhost'],
+    publicPath: '/'
+  },
+  optimization: {
+    minimize: false,
+    splitChunks: {
+      chunks: 'all',
+      minSize: 20000
+    }
   }
 };
 
-export default config;
+module.exports = config;
