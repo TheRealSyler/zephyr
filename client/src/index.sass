@@ -1,17 +1,16 @@
-$primary: #FF2266
-$secondary: #669999
 
-$bg: #2A2D31
-$darkerBg: #18191B
-$fontColor: #FFFFFF
-$primaryFontColor: $primary
-$secondaryFontColor: #C4C4C4
-$linkColor: $secondary
-$animationSpeed: 150ms
+\:root
+  --primary-bg-color: #2A2D31
+  --secondary-bg-color: #18191B
+  --primary-font-color: #FFFFFF
+  --secondary-font-color: #C4C4C4
+  --primary-color: #FF2266
+  --secondary-color: #669999
+  --default-animation-length: 150ms
 
 body
   margin: 0
   padding: 0
-  background: $bg
-  color: $fontColor
+  background: var(--primary-bg-color)
+  color: var(--primary-font-color)
   font-family: Roboto, sans-serif
