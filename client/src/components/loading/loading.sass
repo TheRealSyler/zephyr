@@ -1,0 +1,17 @@
+.loading
+  position: absolute
+  left: 50%
+  top: 50%
+  width: 5rem
+  height: 5rem
+  background: transparent
+  border: solid 0.7rem var(--secondary-bg-color)
+  border-bottom: solid 0.7rem var(--primary-color)
+  border-radius: 100%
+  animation: spin 1s linear infinite
+
+@keyframes spin
+  0%
+    transform: translate(-50%, -50%) rotate(0)
+  100%
+    transform: translate(-50%, -50%) rotate(360deg)
