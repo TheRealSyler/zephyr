@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,8 +16,10 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.MYSQL_ROOT_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       synchronize: true,
-      autoLoadEntities: true
-    })
+      autoLoadEntities: true,
+      entities: ['dist/**/*.entity{.ts,.js}']
+    }),
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]
