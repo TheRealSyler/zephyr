@@ -65,7 +65,7 @@ function getStatus(status: number) {
     } else if (status >= 400 && status <= 499) {
       key = '400-499';
     }
-    return styler(String(status), colors.STATUSES[key]);
+    return styler(`${status} ${HttpStatus[status]}`, colors.STATUSES[key]);
   })()}`;
 }
 
