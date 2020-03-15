@@ -1,4 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 @Controller()
-export class AppController {}
+export class AppController {
+  @Get('/test')
+  @UseGuards(AuthGuard)
+  test() {
+    return {
+      test: 'awd'
+    };
+  }
+}
