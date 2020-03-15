@@ -1,19 +1,78 @@
-import { Controller, UseGuards, Post, Req, HttpStatus, Res, HttpCode } from '@nestjs/common';
-import { LocalAuthGuard } from './guards/auth.local.guard';
+import {
+  Controller,
+  Post,
+  Req,
+  HttpStatus,
+  Res,
+  HttpCode,
+  Body,
+  BadRequestException
+} from '@nestjs/common';
 import { User } from 'src/users/users.entity';
 
 import { Request, Response } from 'express';
-import { AuthService } from './auth.service';
+import { AuthService, RefreshTokenPayload } from './auth.service';
+import { verify } from 'jsonwebtoken';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  async login(@Req() req: Request) {
-    return req.user;
+  async login(@Body() body: any, @Res() res: Response) {
+    const { username, password } = body;
+    if (!username || !password) {
+      throw new BadRequestException();
+    }
+    const user = await this.authService.checkIsPasswordAndUsernameValid(username, password);
+
+    this.authService.addRefreshTokenToRes(res, this.authService.createRefreshToken(user));
+
+    res.send({
+      accessToken: this.authService.createAccessToken(user),
+      user: this.authService.convertUser(user)
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/logout')
+  async logout(@Res() res: Response) {
+    this.authService.addRefreshTokenToRes(res, '');
+    res.send({
+      message: 'Logged out Successfully',
+      error: null
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/refreshToken')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const token = req.cookies.jid;
+    if (!token) {
+      throw new BadRequestException();
+    }
+
+    try {
+      // use var because function scope meme, the only time var is allowed in my code.
+      var payload = verify(token, process.env.REFRESH_TOKEN_SECRET) as RefreshTokenPayload;
+    } catch (err) {
+      throw new BadRequestException();
+    }
+
+    const user = await User.findOne({ username: payload.username });
+
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    if (user.tokenVersion !== payload.tokenVersion) {
+      throw new BadRequestException();
+    }
+
+    this.authService.addRefreshTokenToRes(res, this.authService.createRefreshToken(user));
+
+    res.send({ accessToken: this.authService.createAccessToken(user) });
   }
 
   @Post('/signUp')
@@ -22,49 +81,39 @@ export class AuthController {
 
     let message = 'Internal Server Error';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let userRes = {};
+    let userData = null;
+    let accessToken: string = null;
     const errors: string[] = [];
 
-    if (password) {
-      errors.push(...this.authService.checkPassword(password));
-    } else {
-      errors.push('Password is a required field.');
-    }
-    if (!username) {
-      errors.push('Username is a required field.');
-    }
+    errors.push(...this.authService.checkAreSignUpFieldsValid(password, username));
 
-    const existingUser = await User.findOne({ where: [{ email }, { username }] });
-
-    if (existingUser) {
-      if (existingUser.email && existingUser.email === email) {
-        errors.push('Email is already in use.');
-      }
-
-      if (existingUser.username === username) {
-        errors.push('Username is already in use.');
-      }
-    }
+    errors.push(...(await this.authService.checkDoesUserExist(email, username)));
 
     if (errors.length > 0) {
       status = HttpStatus.BAD_REQUEST;
       message = 'Sign Up Failed.';
-    } else {
-      try {
-        const user = User.create({ email, password, username });
+      res.status(status);
+      res.send({ errors, message, user: null, accessToken });
+      return;
+    }
 
-        const { id, password: n, ...userData } = await user.save();
-        userRes = userData;
-        status = HttpStatus.CREATED;
-        message = 'Successfully Signed Up.';
-      } catch (e) {
-        errors.push('Server Error, please try Again.');
-        message = 'Internal Server Error';
-        status = HttpStatus.INTERNAL_SERVER_ERROR;
-      }
+    try {
+      const user = User.create({ email, password, username });
+
+      await user.save();
+
+      this.authService.addRefreshTokenToRes(res, this.authService.createRefreshToken(user));
+      userData = this.authService.convertUser(user);
+      accessToken = this.authService.createAccessToken(user);
+      status = HttpStatus.CREATED;
+      message = 'Successfully Signed Up.';
+    } catch (e) {
+      errors.push('Server Error, please try Again.');
+      message = 'Internal Server Error';
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     res.status(status);
-    res.send({ errors, message, user: userRes });
+    res.send({ errors, message, user: userData, accessToken });
   }
 }
