@@ -1,10 +1,12 @@
 import { styler } from '@sorg/log';
+import { HttpStatus } from '@nestjs/common';
 
 interface LogRequestData {
   method: string;
   url: string;
   statusCode: number;
   time?: number;
+  headersSent?: boolean;
 }
 
 const colors = {
@@ -30,12 +32,18 @@ const colors = {
   }
 };
 
-export const logRequest = ({ method, statusCode, url, time }: LogRequestData) => {
+export const logRequest = ({
+  method,
+  statusCode,
+  url,
+  time,
+  headersSent = true
+}: LogRequestData) => {
   console.log(
     `${getText('[')}${getMethod(method)}${getText(']')}${colon} ${styler(
       url,
       colors.url
-    )} ${getStatus(statusCode)} ${getTime(time)}`
+    )} ${getStatus(statusCode)} ${getTime(time)} ${getHeadersSent(headersSent)}`
   );
 };
 
@@ -67,6 +75,12 @@ function getStatus(status: number) {
     }
     return styler(`${status} ${HttpStatus[status]}`, colors.STATUSES[key]);
   })()}`;
+}
+
+function getHeadersSent(headersSent: boolean) {
+  return headersSent
+    ? ''
+    : styler('Headers NOT Sent (pro tip, there might be a bug.)', colors.DELETE);
 }
 
 function getMethod(method: string) {

@@ -3,16 +3,25 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-  UnauthorizedException
+  UnauthorizedException,
+  BadRequestException,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { logRequest } from './logger';
 
-@Catch(HttpException, UnauthorizedException)
+@Catch(HttpException, UnauthorizedException, BadRequestException, InternalServerErrorException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException | UnauthorizedException, host: ArgumentsHost) {
+  catch(
+    exception:
+      | HttpException
+      | UnauthorizedException
+      | BadRequestException
+      | InternalServerErrorException,
+    host: ArgumentsHost
+  ) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
+    const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
@@ -22,6 +31,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       url: req.url
     });
 
-    response.status(status).json(exception.getResponse());
+    res.status(status).json(exception.getResponse());
   }
 }
