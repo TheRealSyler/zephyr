@@ -49,10 +49,10 @@ const config: C = {
     publicPath: '/'
   },
   optimization: {
-    minimize: false,
+    // minimize: false,
     splitChunks: {
       chunks: 'all',
-      minSize: 20000
+      minSize: 2000
     }
   }
 };
