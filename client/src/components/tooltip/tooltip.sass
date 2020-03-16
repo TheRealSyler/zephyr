@@ -1,0 +1,26 @@
+.tooltip-wrapper
+  position: relative
+
+  &:hover
+    .tooltip
+      opacity: 1
+      user-select: all
+      pointer-events: all
+      z-index: 2000
+
+.tooltip
+  transition: opacity 200ms ease
+  opacity: 0
+  pointer-events: all
+  user-select: none
+  z-index: -2000
+  position: absolute
+  top: calc( 100% + 10px )
+  left: 50%
+  transform: translateX(-50%)
+  width: max-content
+  background: var(--tooltip-bg-color)
+  padding: 0.5rem 1rem
+  border-radius: 4px
+  text-transform: capitalize
+  box-shadow: 0 0 10px var(--tooltip-drop-shadow-color)
