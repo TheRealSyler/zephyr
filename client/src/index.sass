@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap')
+
+$mainWidth: 800px
 
 \:root
   --primary-bg-color: #2A2D31
@@ -8,9 +11,123 @@
   --secondary-color: #669999
   --default-animation-length: 150ms
 
+  --input-font-color: var(--primary-font-color)
+  --input-bg-color: var(--primary-bg-color)
+  --input-focused-bg-color: #4A4D51
+  --input-invalid-color: var(--primary-color)
+
+  --tooltip-bg-color: var(--primary-bg-color)
+  --tooltip-drop-shadow-color: #0007
+
+  --button-bg-color: var(--primary-color)
+  --button-disabled-bg-color: #18191B
+  --button-disabled-font-color: #aaa
+  --button-font-color: var(--primary-font-color)
+  --button-active-bg-color: #c26
+
+  --form-required-font-color: #aaa
+
+  --link-bg-color: var(--secondary-color)
+  --link-active-bg-color: #9cc
+
 body
   margin: 0
   padding: 0
   background: var(--primary-bg-color)
   color: var(--primary-font-color)
+*
   font-family: Roboto, sans-serif
+
+// TODO link styling
+a
+  color: var(--link-bg-color)
+  text-decoration: none
+  transition: font-size 200ms ease, color 200ms ease
+
+  &.active
+    color: var(--link-active-bg-color)
+    font-size: 1.3rem
+
+$btnAndInpTransition: color 200ms ease, transform 150ms ease, border 200ms ease, background 200ms ease
+
+.input
+  background: var(--input-bg-color)
+  color: var(--input-font-color)
+  border: 1px transparent solid
+  padding: 0.5rem 0.9rem
+  border-radius: 6px
+  box-sizing: border-box
+  font-size: 1rem
+  transition: $btnAndInpTransition
+
+  &:focus
+    transform: scale(1.05)
+    background: var(--input-focused-bg-color)
+  &.invalid
+    color: var(--input-invalid-color)
+    border: 1px var(--input-invalid-color) solid
+    box-shadow: none // Because firefox wants to help.
+
+.button
+  background: var(--button-bg-color)
+  color: var(--button-font-color)
+  border: 1.5px transparent solid
+  padding: 0.5rem 0.9rem
+  border-radius: 6px
+  box-sizing: border-box
+  cursor: pointer
+  font-size: 1rem
+
+  transition: $btnAndInpTransition
+
+  &[disabled],
+  &:hover[disabled],
+  &:active[disabled]
+    background: var(--button-disabled-bg-color)
+    color: var(--button-disabled-font-color)
+    cursor: auto
+    transform: scale(1)
+
+  &:hover
+    transform: scale(1.05)
+
+  &:active
+    transform: scale(1)
+    background: var(--button-active-bg-color)
+
+.main
+  margin: 0 calc( (100vw - #{$mainWidth}) / 2 )
+  max-width: 100vw
+
+.content
+  padding: 2rem
+  border-radius: 5px
+  background: var(--secondary-bg-color)
+
+@media screen and ( max-width: $mainWidth )
+  .main
+    margin: 0 0
+
+// spacing utilities
+
+$sizes: (0, 1, 2, 3, 4, 5, 6, 7, 8, 10)
+$positions: ('top', 'left', 'bottom', 'right')
+
+@each $size in $sizes
+  @each $position in $positions
+    .m#{str-slice($position, 0, 1)}-#{$size}
+      margin-#{$position}: $size + rem
+
+    .m#{str-slice($position, 0, 1)}-#{$size}5
+      margin-#{$position}: ($size + .5) + rem
+
+    .m-#{$size}
+      margin: $size + rem
+    .p-#{$size}
+      padding: $size + rem
+
+    .p#{str-slice($position, 0, 1)}-#{$size}
+      padding-#{$position}: $size + rem
+
+    .p#{str-slice($position, 0, 1)}-#{$size}5
+      padding-#{$position}: ($size + .5) + rem
