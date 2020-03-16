@@ -10,9 +10,10 @@
     "build": "del ./dist && webpack --mode production"
   },
   "dependencies": {
-    "@types/html-webpack-plugin": "^3.2.2",
-    "@types/webpack": "^4.41.7",
-    "@types/webpack-dev-server": "^3.10.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-brands-svg-icons": "^5.12.1",
+    "@fortawesome/free-regular-svg-icons": "^5.12.1",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "css-loader": "^3.4.2",
     "del-cli": "^3.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -29,5 +30,10 @@
     "webpack-bundle-analyzer": "^3.6.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
+  },
+  "devDependencies": {
+    "@types/html-webpack-plugin": "^3.2.2",
+    "@types/webpack": "^4.41.7",
+    "@types/webpack-dev-server": "^3.10.0"
   }
 }
