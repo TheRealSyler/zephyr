@@ -8,10 +8,17 @@
   border: solid 0.7rem var(--secondary-bg-color)
   border-bottom: solid 0.7rem var(--primary-color)
   border-radius: 100%
-  animation: spin 1s linear infinite
+  opacity: 0
+  animation: spin 1s linear infinite, fade-in 100ms forwards
 
 @keyframes spin
   0%
     transform: translate(-50%, -50%) rotate(0)
   100%
     transform: translate(-50%, -50%) rotate(360deg)
+
+@keyframes fade-in
+  0%
+    opacity: 0
+  100%
+    opacity: 1
