@@ -18,7 +18,7 @@ export class AuthService {
   /**Check if the password is Strong. */
   checkIsPasswordStrong(password: string) {
     //§ IMPORTANT, if you change this function also change the front end validation func.
-    const res = Password.Validate(password, [{ type: 'uppercase' }, { type: 'symbols' }], {
+    const res = Password.Validate(password, [{ type: 'uppercase' }, { type: 'numbers' }], {
       maxLength: 255,
       minLength: 7
     });
