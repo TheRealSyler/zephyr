@@ -1,21 +1,7 @@
-import { Password } from 'suf-password';
 import { POST } from './api';
 import { useContext } from 'preact/hooks';
 import { AuthContext } from './app';
 import { route } from 'preact-router';
-
-/**Check if the password is Strong. */
-export function checkIsPasswordStrong(password: string) {
-  //§ IMPORTANT, if you change this function also change the back end validation func.
-  const res = Password.Validate(password, [{ type: 'uppercase' }, { type: 'numbers' }], {
-    maxLength: 255,
-    minLength: 7
-  });
-  if (!res.passed) {
-    return res.errors;
-  }
-  return [];
-}
 
 export const GuardRoutes = (auth: Partial<AuthContext>) => {
   switch (window.location.pathname) {

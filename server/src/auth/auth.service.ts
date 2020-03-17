@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Password } from 'suf-password';
-import { User } from 'src/users/users.entity';
+import { User } from 'src/entities/users.entity';
 import { sign } from 'jsonwebtoken';
+import { checkIsPasswordStrong } from '../shared/auth';
 
 import { Response } from 'express';
 import { getConnection } from 'typeorm';
@@ -15,26 +15,13 @@ export interface RefreshTokenPayload {
 export class AuthService {
   constructor() {}
 
-  /**Check if the password is Strong. */
-  checkIsPasswordStrong(password: string) {
-    //§ IMPORTANT, if you change this function also change the front end validation func.
-    const res = Password.Validate(password, [{ type: 'uppercase' }, { type: 'numbers' }], {
-      maxLength: 255,
-      minLength: 7
-    });
-    if (!res.passed) {
-      return res.errors;
-    }
-    return [];
-  }
-
   /**Check if the username and password are empty and is password strong enough. */
   checkAreSignUpFieldsValid(password?: string, username?: string) {
     const errors: string[] = [];
     if (!password) {
       errors.push('Password is a required field.');
     } else {
-      errors.push(...this.checkIsPasswordStrong(password));
+      errors.push(...checkIsPasswordStrong(password));
     }
     if (!username) {
       errors.push('Username is a required field.');
