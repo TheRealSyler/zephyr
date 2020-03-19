@@ -8,11 +8,12 @@ import {
   Body,
   BadRequestException
 } from '@nestjs/common';
-import { User } from 'src/users/users.entity';
+import { User } from 'src/entities/users.entity';
 
 import { Request, Response } from 'express';
 import { AuthService, RefreshTokenPayload } from './auth.service';
 import { verify } from 'jsonwebtoken';
+import { POST } from 'src/shared/shared.api.POST';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  async login(@Body() body: any, @Res() res: Response) {
+  async login(
+    @Body() body: Partial<POST['auth/login']['body']>,
+    @Res() res: Response<POST['auth/login']['response']>
+  ) {
     const { username, password } = body;
     if (!username || !password) {
       throw new BadRequestException();
@@ -37,7 +41,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  async logout(@Res() res: Response) {
+  async logout(@Res() res: Response<POST['auth/logout']['response']>) {
     this.authService.addRefreshTokenToRes(res, '');
     res.send({
       message: 'Logged out Successfully',
@@ -47,7 +51,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/refreshToken')
-  async refreshToken(@Req() req: Request, @Res() res: Response) {
+  async refreshToken(
+    @Req() req: Request,
+    @Res() res: Response<POST['auth/refreshToken']['response']>
+  ) {
     const token = req.cookies.jid;
     if (!token) {
       throw new BadRequestException();
@@ -76,8 +83,11 @@ export class AuthController {
   }
 
   @Post('/signUp')
-  async singUp(@Req() req: Request, @Res() res: Response) {
-    const { email, password, username } = req.body;
+  async singUp(
+    @Body() body: Partial<POST['auth/signUp']['body']>,
+    @Res() res: Response<POST['auth/signUp']['response']>
+  ) {
+    const { email, password, username } = body;
 
     let message = 'Internal Server Error';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;

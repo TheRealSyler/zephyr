@@ -1,11 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/entities/users.entity';
 import { sign } from 'jsonwebtoken';
-import { checkIsPasswordStrong } from '../shared/auth';
+import { checkIsPasswordStrong } from '../shared/shared.auth';
 
 import { Response } from 'express';
 import { getConnection } from 'typeorm';
 import { verify } from 'argon2';
+import { SimpleUser } from 'src/shared/shared.api.POST';
 
 export interface RefreshTokenPayload {
   username: string;
@@ -57,7 +58,7 @@ export class AuthService {
   }
 
   /**Converts the A `User` to a user object that can be sent to the frontend. */
-  convertUser(user: User) {
+  convertUser(user: User): SimpleUser {
     return {
       username: user.username,
       email: user.email

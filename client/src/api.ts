@@ -1,14 +1,13 @@
 import { AuthContext } from './app';
 import { useContext } from 'preact/hooks';
+import { POST } from './shared/shared.api.POST';
+import { GET } from './shared/shared.api.GET';
 
 const apiUrlBase = 'http://localhost:3000/';
 
-type POST_PATHS = 'auth/login' | 'auth/signUp' | 'auth/refreshToken' | 'auth/logout';
-type GET_PATHS = 'test';
-
-interface Response {
+interface Response<T> {
   status: number;
-  body: any;
+  body: T;
 }
 
 type Headers = [string, string][];
@@ -19,7 +18,7 @@ function addAuthHeader(accessToken: null | string, headers: Headers) {
   }
 }
 
-export async function GET(path: GET_PATHS): Promise<Response> {
+export async function GET<T extends GET, K extends keyof T>(path: K): Promise<Response<T[K]>> {
   const authContext = useContext(AuthContext);
   const headers: Headers = [];
   addAuthHeader(authContext.accessToken, headers);
@@ -34,7 +33,10 @@ export async function GET(path: GET_PATHS): Promise<Response> {
 }
 
 /**Note: The body has to be valid JSON. */
-export async function POST<T>(path: POST_PATHS, body?: T): Promise<Response> {
+export async function POST<T extends POST, K extends keyof T>(
+  path: K,
+  body?: T[K]['body']
+): Promise<Response<T[K]['response']>> {
   const authContext = useContext(AuthContext);
 
   const headers: Headers = [['Content-Type', 'application/json']];
