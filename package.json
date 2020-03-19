@@ -3,6 +3,7 @@
     "start": "concurrently \"cd server && yarn start:dev\" \"cd client && yarn start\""
   },
   "dependencies": {
-    "concurrently": "^5.1.0"
+    "concurrently": "^5.1.0",
+    "suf-password": "^0.7.0"
   }
 }
