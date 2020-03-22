@@ -1,7 +1,7 @@
 import { h, FunctionComponent, Fragment } from 'preact';
 import FormComponent from '../components/form/form';
 import { SignUp } from '../auth';
-import { checkIsPasswordStrong } from '../shared/auth';
+import { checkIsPasswordStrong } from '../shared/utils.auth';
 
 interface SignUpViewProps {}
 

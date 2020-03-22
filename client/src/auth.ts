@@ -2,6 +2,7 @@ import { POST } from './api';
 import { useContext } from 'preact/hooks';
 import { AuthContext } from './app';
 import { route } from 'preact-router';
+import { POST as POST_API } from './shared/shared.api.POST';
 
 export const GuardRoutes = (auth: Partial<AuthContext>) => {
   switch (window.location.pathname) {
@@ -35,13 +36,7 @@ export async function Login(username: string, password: string) {
   return res;
 }
 
-interface UserAuthData {
-  username: string;
-  password: string;
-  email: string | null;
-}
-
-export async function SignUp({ username, password, email }: UserAuthData) {
+export async function SignUp({ username, password, email }: POST_API['auth/signUp']['body']) {
   const res = await POST('auth/signUp', {
     username,
     password,
