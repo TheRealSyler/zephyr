@@ -1,3 +1,5 @@
+import { SimpleUser, ListItems } from './api.interfaces';
+
 export interface POST {
   [key: string]: { body: any; response: any };
   'auth/login': {
@@ -26,7 +28,7 @@ export interface POST {
   'auth/signUp': {
     body: {
       username: string;
-      email: string;
+      email: string | null;
       password: string;
     };
     response: {
@@ -38,21 +40,17 @@ export interface POST {
   };
   'list/create': {
     body: {
-      username: string;
-      listName: string;
-      items: string[];
-      description: string;
+      name: string;
+      items: ListItems;
+      description: string | null;
     };
-    response: {
-      username: string;
-      listName: string;
-      items: string[];
-      description: string;
-    };
+    response: {};
   };
-}
-
-export interface SimpleUser {
-  username: string;
-  email: null | string;
+  'list/add': {
+    body: {
+      name: string;
+      items: ListItems;
+    };
+    response: {};
+  };
 }
