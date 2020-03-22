@@ -1,16 +1,19 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from 'src/entities/users.entity';
+import { User } from 'src/entities/user.entity';
 import { sign } from 'jsonwebtoken';
-import { checkIsPasswordStrong } from '../shared/shared.auth';
+import { checkIsPasswordStrong } from '../shared/utils.auth';
 
 import { Response } from 'express';
 import { getConnection } from 'typeorm';
 import { verify } from 'argon2';
-import { SimpleUser } from 'src/shared/shared.api.POST';
+import { SimpleUser } from 'src/shared/api.interfaces';
 
 export interface RefreshTokenPayload {
   username: string;
   tokenVersion: number;
+}
+export interface AccessTokenPayload {
+  username: string;
 }
 @Injectable()
 export class AuthService {
@@ -66,7 +69,8 @@ export class AuthService {
   }
 
   createAccessToken(user: User) {
-    return sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, {
+    const payload: AccessTokenPayload = { username: user.username };
+    return sign(payload, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: '15m'
     });
   }
@@ -90,7 +94,7 @@ export class AuthService {
   }
 
   /**Increase the tokenVersion  */
-  async revokeRefreshTokensForUser(id: string) {
+  async revokeRefreshTokensForUser(id: number) {
     await getConnection()
       .getRepository(User)
       .increment({ id }, 'tokenVersion', 1);

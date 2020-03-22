@@ -8,12 +8,12 @@ import {
   Body,
   BadRequestException
 } from '@nestjs/common';
-import { User } from 'src/entities/users.entity';
+import { User } from 'src/entities/user.entity';
 
 import { Request, Response } from 'express';
 import { AuthService, RefreshTokenPayload } from './auth.service';
 import { verify } from 'jsonwebtoken';
-import { POST } from 'src/shared/shared.api.POST';
+import { POST } from 'src/shared/api.POST';
 
 @Controller('auth')
 export class AuthController {

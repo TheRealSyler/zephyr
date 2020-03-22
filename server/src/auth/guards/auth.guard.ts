@@ -1,11 +1,17 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { verify } from 'jsonwebtoken';
+import { AccessTokenPayload } from '../auth.service';
+
+export interface AuthRequest<T = {}> extends Request {
+  token: AccessTokenPayload;
+  body: T;
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<AuthRequest>();
 
     const authorization = request.headers.authorization;
 
@@ -16,9 +22,9 @@ export class AuthGuard implements CanActivate {
     try {
       const token = authorization.split(' ')[1];
 
-      const payload = verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const payload = verify(token, process.env.ACCESS_TOKEN_SECRET) as AccessTokenPayload;
 
-      console.log('AUTH GUARD PAYLOAD: ', payload);
+      request.token = payload;
     } catch (e) {
       throw new UnauthorizedException();
     }
