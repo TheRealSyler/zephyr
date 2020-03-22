@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { ListModule } from './list/list.module';
 
 @Module({
   imports: [
@@ -18,8 +19,13 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
       autoLoadEntities: true,
       entities: ['dist/**/*.entity{.ts,.js}']
+      // migrations: ['migration/*.ts'],
+      // cli: {
+      //   migrationsDir: 'migration'
+      // }
     }),
-    AuthModule
+    AuthModule,
+    ListModule
   ],
   controllers: [AppController],
   providers: [AppService]
