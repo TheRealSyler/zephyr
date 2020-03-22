@@ -1,11 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BeforeInsert,
+  BaseEntity,
+  OneToMany,
+  JoinTable
+} from 'typeorm';
 import { hash } from 'argon2';
 
-import * as uuid from 'uuid';
+import { List } from './list.entity';
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid') id: string;
+  @PrimaryGeneratedColumn() id: number;
 
   @Column('varchar', { length: 255, unique: true }) username: string;
 
@@ -15,10 +23,14 @@ export class User extends BaseEntity {
 
   @Column('int', { default: 0 }) tokenVersion: number;
 
-  @BeforeInsert()
-  addId() {
-    this.id = uuid.v4();
-  }
+  @OneToMany(
+    type => List,
+    list => list.createdBy,
+    { cascade: true }
+  )
+  @JoinTable()
+  lists: List[];
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await hash(this.password);
