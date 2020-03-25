@@ -1,7 +1,8 @@
 import { AuthContext } from './app';
 import { useContext } from 'preact/hooks';
-import { POST } from './shared/shared.api.POST';
-import { GET } from './shared/shared.api.GET';
+import { POST } from './shared/api.POST';
+import { GET } from './shared/api.GET';
+import querystring from 'querystring';
 
 const apiUrlBase = 'http://localhost:3000/';
 
@@ -18,14 +19,20 @@ function addAuthHeader(accessToken: null | string, headers: Headers) {
   }
 }
 
-export async function GET<T extends GET, K extends keyof T>(path: K): Promise<Response<T[K]>> {
+export async function GET<K extends keyof GET>(
+  path: K,
+  params?: GET[K]['params']
+): Promise<Response<GET[K]>> {
   const authContext = useContext(AuthContext);
   const headers: Headers = [];
   addAuthHeader(authContext.accessToken, headers);
 
-  const res = await fetch(`${apiUrlBase}${path}`, {
-    headers
-  });
+  const res = await fetch(
+    `${apiUrlBase}${path}${params ? '?' + querystring.stringify(params) : ''}`,
+    {
+      headers
+    }
+  );
   return {
     status: res.status,
     body: await res.json()
@@ -33,10 +40,10 @@ export async function GET<T extends GET, K extends keyof T>(path: K): Promise<Re
 }
 
 /**Note: The body has to be valid JSON. */
-export async function POST<T extends POST, K extends keyof T>(
+export async function POST<K extends keyof POST>(
   path: K,
-  body?: T[K]['body']
-): Promise<Response<T[K]['response']>> {
+  body?: POST[K]['body']
+): Promise<Response<POST[K]['response']>> {
   const authContext = useContext(AuthContext);
 
   const headers: Headers = [['Content-Type', 'application/json']];

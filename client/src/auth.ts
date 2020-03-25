@@ -2,7 +2,7 @@ import { POST } from './api';
 import { useContext } from 'preact/hooks';
 import { AuthContext } from './app';
 import { route } from 'preact-router';
-import { POST as POST_API } from './shared/shared.api.POST';
+import { POST as POST_API } from './shared/api.POST';
 
 export const GuardRoutes = (auth: Partial<AuthContext>) => {
   switch (window.location.pathname) {
