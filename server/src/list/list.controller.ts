@@ -63,7 +63,7 @@ export class ListController {
 
         return new SuccessResponse();
       }
-      throw new BadRequestException('List Already Exists.');
+      throw new BadRequestException(`List ${name} Already Exists.`);
     }
     throw new BadRequestException();
   }
@@ -121,7 +121,7 @@ export class ListController {
         relations: ['createdBy']
       });
       if (!list) {
-        throw new BadRequestException(`List '${name}' not found.`);
+        throw new BadRequestException(`List ${name} not found.`);
       }
       if (list?.createdBy?.username === req.token.username) {
         list.remove();
