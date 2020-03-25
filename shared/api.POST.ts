@@ -1,7 +1,8 @@
-import { SimpleUser, ListItems } from './api.interfaces';
+import { SimpleUser, ListItems, ListRemoveItems } from './api.interfaces';
 
 export interface POST {
-  [key: string]: { body: any; response: any };
+  // DON'T Use [key: string]: { body: any; response: any }; the types in the front end will brake.
+  // Reason: keyof POST won't work like expected because the keys are of type string.
   'auth/login': {
     body: {
       username: string;
@@ -50,6 +51,13 @@ export interface POST {
     body: {
       name: string;
       items: ListItems;
+    };
+    response: {};
+  };
+  'list/remove': {
+    body: {
+      name: string;
+      items: ListRemoveItems;
     };
     response: {};
   };

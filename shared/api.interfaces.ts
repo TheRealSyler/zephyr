@@ -1,4 +1,6 @@
-export interface List {}
+export interface List {
+  // TODO (used in GET)
+}
 
 export interface ListMovieItem {
   name: string;
@@ -8,6 +10,10 @@ export interface ListMovieItem {
 export interface ListItems {
   movies?: ListMovieItem[];
 }
+
+export type ListRemoveItems = {
+  [key in keyof ListItems]: string[];
+};
 
 export interface SimpleUser {
   username: string;
