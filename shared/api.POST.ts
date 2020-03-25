@@ -1,4 +1,4 @@
-import { SimpleUser, ListItems, ListRemoveItems } from './api.interfaces';
+import { SimpleUser, ListItems, ListRemoveItems, Movie } from './api.interfaces';
 
 export interface POST {
   // DON'T Use [key: string]: { body: any; response: any }; the types in the front end will brake.
@@ -59,6 +59,14 @@ export interface POST {
       name: string;
       items: ListRemoveItems;
     };
+    response: {};
+  };
+  'movie/create': {
+    body: Partial<Movie>;
+    response: {};
+  };
+  'movie/edit': {
+    body: Partial<Movie>;
     response: {};
   };
 }

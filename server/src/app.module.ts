@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ListModule } from './list/list.module';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { ListModule } from './list/list.module';
       // }
     }),
     AuthModule,
-    ListModule
+    ListModule,
+    MovieModule
   ],
   controllers: [AppController],
   providers: [AppService]

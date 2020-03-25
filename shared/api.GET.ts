@@ -1,4 +1,4 @@
-import { List } from './api.interfaces';
+import { List, Movie } from './api.interfaces';
 
 export interface GET {
   // DON'T Use [key: string]: { response: any }; the types in the front end will brake.
@@ -11,6 +11,14 @@ export interface GET {
   };
   list: {
     response: List[];
+    params: { username: string };
+  };
+  movie: {
+    response: Movie;
+    params: { name: string };
+  };
+  'movie/all': {
+    response: Movie[];
     params: {};
   };
 }

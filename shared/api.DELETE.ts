@@ -9,4 +9,10 @@ export interface DELETE {
     };
     response: SuccessResponse;
   };
+  movie: {
+    body: {
+      name: string;
+    };
+    response: SuccessResponse;
+  };
 }
