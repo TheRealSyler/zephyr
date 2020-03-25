@@ -18,14 +18,15 @@ import { List } from 'src/entities/list.entity';
 import { GET } from 'src/shared/api.GET';
 import { SuccessResponse } from 'src/shared/api.response.success';
 
+@UseGuards(AuthGuard)
 @Controller('list')
 export class ListController {
   constructor(private readonly listService: ListService) {}
 
-  @UseGuards(AuthGuard)
   @Get()
-  async getUsersLists(@Req() req: AuthRequest): Promise<GET['list']> {
-    const user = await User.findOne({ where: { username: req.token.username } });
+  async getUsersLists(@Req() req: AuthRequest): Promise<GET['list']['response']> {
+    const username = req.query.username || req.token.username;
+    const user = await User.findOne({ where: { username } });
 
     if (user) {
       return await List.find({
@@ -34,10 +35,10 @@ export class ListController {
         select: ['description', 'name']
       });
     }
-    throw new BadRequestException();
+
+    throw new BadRequestException(`User ${username} Not Found.`);
   }
 
-  @UseGuards(AuthGuard)
   @Post('/create')
   async createList(
     @Req() req: AuthRequest<Partial<POST['list/create']['body']>>
@@ -67,10 +68,9 @@ export class ListController {
     throw new BadRequestException();
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/add')
-  async addItem(@Req() req: AuthRequest<Partial<POST['list/add']['body']>>) {
+  async addItems(@Req() req: AuthRequest<Partial<POST['list/add']['body']>>) {
     const { items, name } = req.body;
 
     if (items && name) {
