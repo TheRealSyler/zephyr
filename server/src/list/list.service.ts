@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { List } from 'src/entities/list.entity';
 import { Movie } from 'src/entities/movie.entity';
-import { ListItems, ListMovieItem } from 'src/shared/api.interfaces';
+import { ListItems, ListMovieItem, ListRemoveItems } from 'src/shared/api.interfaces';
 
 @Injectable()
 export class ListService {
@@ -15,6 +15,25 @@ export class ListService {
         );
       }
     }
+  }
+
+  async removeItems(items: ListRemoveItems, list: List) {
+    for (const key in items) {
+      if (items.hasOwnProperty(key)) {
+        const itemsToRemove = this.createFilterObj(items[key]);
+        list[key as 'movies'] = list[key as 'movies'].filter(v => !itemsToRemove[v.name]);
+      }
+    }
+    list.save();
+  }
+
+  private createFilterObj(arr: string[]) {
+    const res = {};
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+      res[element] = true;
+    }
+    return res;
   }
 
   private async convertItems(_items: ListItems, key: string, list: List) {

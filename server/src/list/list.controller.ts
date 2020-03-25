@@ -88,7 +88,26 @@ export class ListController {
     throw new BadRequestException();
   }
 
-  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('/remove')
+  async removeItems(@Req() req: AuthRequest<Partial<POST['list/remove']['body']>>) {
+    const { items, name } = req.body;
+
+    if (items && name) {
+      const list = await List.findOne({
+        where: { name: name },
+        select: ['id'],
+        relations: ['createdBy', 'movies']
+      });
+
+      if (list?.createdBy?.username === req.token.username) {
+        await this.listService.removeItems(items, list);
+        return new SuccessResponse();
+      }
+    }
+    throw new BadRequestException();
+  }
+
   @HttpCode(HttpStatus.OK)
   @Delete()
   async deleteList(@Req() req: AuthRequest<Partial<DELETE['list']['body']>>) {
