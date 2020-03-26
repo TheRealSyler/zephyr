@@ -11,9 +11,10 @@ import {
 import { User } from 'src/entities/user.entity';
 
 import { Request, Response } from 'express';
-import { AuthService, RefreshTokenPayload } from './auth.service';
+import { AuthService } from './auth.service';
 import { verify } from 'jsonwebtoken';
 import { POST } from 'src/shared/api.POST';
+import { RefreshTokenPayload } from 'src/shared/utils.auth';
 
 @Controller('auth')
 export class AuthController {

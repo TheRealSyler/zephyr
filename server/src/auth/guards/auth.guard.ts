@@ -3,6 +3,8 @@ import { Request } from 'express';
 import { verify } from 'jsonwebtoken';
 import { AccessTokenPayload } from '../auth.service';
 
+import { AccessTokenPayload } from 'src/shared/utils.auth';
+
 export interface AuthRequest<T = {}> extends Request {
   token: AccessTokenPayload;
   body: T;

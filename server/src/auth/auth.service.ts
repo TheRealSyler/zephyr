@@ -1,20 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { sign } from 'jsonwebtoken';
-import { checkIsPasswordStrong } from '../shared/utils.auth';
+import {
+  checkIsPasswordStrong,
+  AccessTokenPayload,
+  RefreshTokenPayload
+} from '../shared/utils.auth';
 
 import { Response } from 'express';
 import { getConnection } from 'typeorm';
 import { verify } from 'argon2';
 import { SimpleUser } from 'src/shared/api.interfaces';
 
-export interface RefreshTokenPayload {
-  username: string;
-  tokenVersion: number;
-}
-export interface AccessTokenPayload {
-  username: string;
-}
 @Injectable()
 export class AuthService {
   constructor() {}

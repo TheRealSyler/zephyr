@@ -11,3 +11,11 @@ export function checkIsPasswordStrong(password: string) {
   }
   return [];
 }
+
+export interface RefreshTokenPayload {
+  username: string;
+  tokenVersion: number;
+}
+export interface AccessTokenPayload {
+  username: string;
+}
