@@ -12,10 +12,17 @@ export function checkIsPasswordStrong(password: string) {
   return [];
 }
 
+export enum UserRole {
+  'DEFAULT',
+  'CONTRIBUTOR',
+  'ADMIN'
+}
+
 export interface RefreshTokenPayload {
   username: string;
   tokenVersion: number;
 }
 export interface AccessTokenPayload {
   username: string;
+  role: UserRole;
 }

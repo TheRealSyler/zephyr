@@ -1,4 +1,6 @@
 import { SimpleUser, ListItems, ListRemoveItems, Movie } from './api.interfaces';
+import { UserRole } from './utils.auth';
+import { SuccessResponse } from './api.response.success';
 
 export interface POST {
   // DON'T Use [key: string]: { body: any; response: any }; the types in the front end will brake.
@@ -76,5 +78,13 @@ export interface POST {
       addToSuggested: boolean;
     };
     response: {};
+  };
+  'user/setRole': {
+    body: {
+      newRole: UserRole;
+      username?: string;
+      adminPassword?: string;
+    };
+    response: SuccessResponse;
   };
 }

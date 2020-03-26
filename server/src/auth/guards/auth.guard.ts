@@ -1,17 +1,26 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  SetMetadata
+} from '@nestjs/common';
 import { Request } from 'express';
 import { verify } from 'jsonwebtoken';
-import { AccessTokenPayload } from '../auth.service';
+import { Reflector } from '@nestjs/core';
 
-import { AccessTokenPayload } from 'src/shared/utils.auth';
+import { AccessTokenPayload, UserRole } from 'src/shared/utils.auth';
 
 export interface AuthRequest<T = {}> extends Request {
   token: AccessTokenPayload;
   body: T;
 }
 
+export const Role = (role: UserRole) => SetMetadata('role', role);
+
 @Injectable()
 export class AuthGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<AuthRequest>();
 
@@ -26,11 +35,13 @@ export class AuthGuard implements CanActivate {
 
       const payload = verify(token, process.env.ACCESS_TOKEN_SECRET) as AccessTokenPayload;
 
-      request.token = payload;
-    } catch (e) {
-      throw new UnauthorizedException();
-    }
+      const requiredRole = this.reflector.get<UserRole | undefined>('role', context.getHandler());
 
-    return true;
+      if ((requiredRole || 0) <= payload.role) {
+        request.token = payload;
+        return true;
+      }
+    } catch {}
+    throw new UnauthorizedException();
   }
 }

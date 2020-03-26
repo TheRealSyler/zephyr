@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   createAccessToken(user: User) {
-    const payload: AccessTokenPayload = { username: user.username };
+    const payload: AccessTokenPayload = { username: user.username, role: user.role };
     return sign(payload, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: '15m'
     });

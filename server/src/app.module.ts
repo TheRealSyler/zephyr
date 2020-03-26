@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ListModule } from './list/list.module';
 import { MovieModule } from './movie/movie.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { MovieModule } from './movie/movie.module';
     }),
     AuthModule,
     ListModule,
-    MovieModule
+    MovieModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService]

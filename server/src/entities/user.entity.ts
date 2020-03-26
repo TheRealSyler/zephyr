@@ -11,6 +11,7 @@ import { hash } from 'argon2';
 
 import { List } from './list.entity';
 import { MovieSuggestion } from './movieSuggestion.entity';
+import { UserRole } from 'src/shared/utils.auth';
 
 @Entity()
 export class User extends BaseEntity {
@@ -23,6 +24,13 @@ export class User extends BaseEntity {
   @Column('text') password: string;
 
   @Column('int', { default: 0 }) tokenVersion: number;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.DEFAULT
+  })
+  role: UserRole;
 
   @OneToMany(
     type => List,

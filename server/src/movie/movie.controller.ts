@@ -17,11 +17,11 @@ import { SuccessResponse } from 'src/shared/api.response.success';
 import { MovieService } from './movie.service';
 import { Request } from '../utils/utils.interfaces';
 import { DELETE } from 'src/shared/api.DELETE';
-import { AuthGuard, AuthRequest } from 'src/auth/guards/auth.guard';
+import { AuthGuard, AuthRequest, Role } from 'src/auth/guards/auth.guard';
 import { MovieSuggestion } from 'src/entities/movieSuggestion.entity';
 import { User } from 'src/entities/user.entity';
+import { UserRole } from 'src/shared/utils.auth';
 
-// TODO Add roles to user and protect routes.
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
@@ -56,6 +56,7 @@ export class MovieController {
     throw new InternalServerErrorException();
   }
 
+  @UseGuards(AuthGuard)
   @Post('/create')
   async createMovie(
     @Req() req: Request<POST['movie/create']['body']>
@@ -146,6 +147,8 @@ export class MovieController {
     throw new BadRequestException();
   }
 
+  @Role(UserRole.CONTRIBUTOR)
+  @UseGuards(AuthGuard)
   @Post('/edit')
   async editMovie(
     @Req() req: Request<POST['movie/edit']['body']>
@@ -169,6 +172,8 @@ export class MovieController {
     throw new BadRequestException();
   }
 
+  @Role(UserRole.CONTRIBUTOR)
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete()
   async deleteMovie(@Req() req: Request<DELETE['movie']['body']>) {
