@@ -69,4 +69,12 @@ export interface POST {
     body: Partial<Movie>;
     response: {};
   };
+  'movie/suggest': {
+    body: {
+      movie: string;
+      suggestion: string;
+      addToSuggested: boolean;
+    };
+    response: {};
+  };
 }

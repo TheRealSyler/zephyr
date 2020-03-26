@@ -5,11 +5,12 @@ import {
   BeforeInsert,
   BaseEntity,
   OneToMany,
-  JoinTable
+  ManyToOne
 } from 'typeorm';
 import { hash } from 'argon2';
 
 import { List } from './list.entity';
+import { MovieSuggestion } from './movieSuggestion.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -25,11 +26,15 @@ export class User extends BaseEntity {
 
   @OneToMany(
     type => List,
-    list => list.createdBy,
-    { cascade: true }
+    list => list.createdBy
   )
-  @JoinTable()
   lists: List[];
+
+  @ManyToOne(
+    type => MovieSuggestion,
+    suggestion => suggestion.suggestedBy
+  )
+  suggestions: MovieSuggestion[];
 
   @BeforeInsert()
   async hashPassword() {

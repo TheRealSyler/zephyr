@@ -7,7 +7,8 @@ import {
   HttpCode,
   HttpStatus,
   Delete,
-  InternalServerErrorException
+  InternalServerErrorException,
+  UseGuards
 } from '@nestjs/common';
 import { GET } from 'src/shared/api.GET';
 import { Movie } from 'src/entities/movie.entity';
@@ -16,6 +17,9 @@ import { SuccessResponse } from 'src/shared/api.response.success';
 import { MovieService } from './movie.service';
 import { Request } from '../utils/utils.interfaces';
 import { DELETE } from 'src/shared/api.DELETE';
+import { AuthGuard, AuthRequest } from 'src/auth/guards/auth.guard';
+import { MovieSuggestion } from 'src/entities/movieSuggestion.entity';
+import { User } from 'src/entities/user.entity';
 
 // TODO Add roles to user and protect routes.
 @Controller('movie')
@@ -25,7 +29,12 @@ export class MovieController {
   @Get()
   async getMovie(@Req() req: Request): Promise<GET['movie']['response']> {
     const name = req.query.name;
-    const movie = await Movie.findOne({ where: { name }, select: ['name', 'description'] });
+
+    const movie = await Movie.findOne({
+      where: { name },
+      select: ['id', 'name', 'description'],
+      relations: ['suggestions']
+    });
 
     if (movie) {
       return movie;
@@ -36,7 +45,9 @@ export class MovieController {
   // TODO add pagination, and ability to get by criteria.
   @Get('/all')
   async getAllMovies(): Promise<GET['movie/all']['response']> {
-    const movies = await Movie.find({ select: ['name', 'description'] });
+    const movies = await Movie.find({
+      select: ['id', 'name', 'description']
+    });
 
     if (movies) {
       return movies;
@@ -53,13 +64,84 @@ export class MovieController {
 
     if (name) {
       const movie = await Movie.findOne({ where: { name }, select: ['id'] });
-      console.log(movie);
       if (!movie) {
         const newMovie = Movie.create({ name, description });
         await newMovie.save();
         return new SuccessResponse();
       }
       throw new BadRequestException(`Movie ${name} Already Exists.`);
+    }
+    throw new BadRequestException();
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/suggest')
+  async suggestMovie(
+    @Req() req: AuthRequest<POST['movie/suggest']['body']>
+  ): Promise<POST['movie/suggest']['response']> {
+    const { addToSuggested, movie: movieName, suggestion: suggestionName } = req.body;
+
+    const [user, movie, suggestedMovie] = await Promise.all([
+      User.findOne({ where: { username: req.token.username } }),
+      Movie.findOne({ where: { name: movieName }, select: ['id'] }),
+      Movie.findOne({ where: { name: suggestionName }, select: ['id'] })
+    ]);
+
+    const suggestion = await MovieSuggestion.findOne({
+      where: { movie, suggestion: suggestedMovie },
+      relations: ['suggestedBy'],
+      loadRelationIds: true
+    });
+
+    if (user && movie && suggestedMovie && movie.id !== suggestedMovie.id) {
+      if (suggestion) {
+        const isSuggested = (suggestion.suggestedBy as any).find(d => d === user.id) !== undefined;
+        console.log(suggestion.suggestedBy);
+        if (addToSuggested && !isSuggested) {
+          await MovieSuggestion.createQueryBuilder()
+            .relation('suggestedBy')
+            .of(suggestion)
+            .add(user);
+          await MovieSuggestion.createQueryBuilder()
+            .update()
+            .set({ numberOfSuggestions: () => 'numberOfSuggestions + 1' })
+            .where('id = :id', { id: suggestion.id })
+            .execute();
+
+          return new SuccessResponse('Added To Suggested.');
+        } else if (!addToSuggested && isSuggested) {
+          await MovieSuggestion.createQueryBuilder()
+            .relation('suggestedBy')
+            .of(suggestion)
+            .remove(user);
+
+          await MovieSuggestion.createQueryBuilder()
+            .update()
+            .set({ numberOfSuggestions: () => 'numberOfSuggestions - 1' })
+            .where('id = :id', { id: suggestion.id })
+            .execute();
+
+          if (suggestion.suggestedBy.length <= 1) {
+            await suggestion.remove();
+            return new SuccessResponse('Removed Suggestion.');
+          }
+
+          return new SuccessResponse('Removed From Suggested.');
+        } else {
+          return new SuccessResponse('Already Set.');
+        }
+      } else if (addToSuggested) {
+        const newSuggestion = MovieSuggestion.create({
+          suggestedBy: [user],
+          suggestion: suggestedMovie,
+          numberOfSuggestions: 1,
+          movie
+        });
+
+        await newSuggestion.save();
+
+        return new SuccessResponse('Created New Suggestion');
+      }
     }
     throw new BadRequestException();
   }
