@@ -1,9 +1,16 @@
 export interface List {
-  // TODO (used in GET)
+  name: string;
+  description: string;
 }
 export interface Movie {
   name: string;
   description: string;
+}
+
+export interface MovieSuggestion {
+  movie: Movie;
+  suggestion: Movie;
+  numberOfSuggestions: number;
 }
 
 export interface ListMovieItem {

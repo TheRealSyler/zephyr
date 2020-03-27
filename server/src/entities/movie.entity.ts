@@ -1,9 +1,10 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
 import { List } from './list.entity';
 import { MovieSuggestion } from './movieSuggestion.entity';
+import { Movie as IMovie } from '../shared/api.interfaces';
 
 @Entity()
-export class Movie extends BaseEntity {
+export class Movie extends BaseEntity implements IMovie {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('text', { nullable: true }) description: string;

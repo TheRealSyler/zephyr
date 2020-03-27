@@ -15,29 +15,12 @@ import { AuthGuard, AuthRequest } from 'src/auth/guards/auth.guard';
 import { User } from 'src/entities/user.entity';
 import { ListService } from './list.service';
 import { List } from 'src/entities/list.entity';
-import { GET } from 'src/shared/api.GET';
 import { SuccessResponse } from 'src/shared/api.response.success';
 
 @UseGuards(AuthGuard)
 @Controller('list')
 export class ListController {
   constructor(private readonly listService: ListService) {}
-
-  @Get()
-  async getUsersLists(@Req() req: AuthRequest): Promise<GET['list']['response']> {
-    const username = req.query.username || req.token.username;
-    const user = await User.findOne({ where: { username } });
-
-    if (user) {
-      return await List.find({
-        where: { createdBy: user },
-        relations: ['movies'],
-        select: ['description', 'name']
-      });
-    }
-
-    throw new BadRequestException(`User ${username} Not Found.`);
-  }
 
   @Post('/create')
   async createList(
@@ -48,7 +31,7 @@ export class ListController {
     const user = await User.findOne({ where: { username: req.token.username }, select: ['id'] });
 
     if (name && user && items) {
-      const list = await List.findOne({ where: { name: name }, select: ['id'] });
+      const list = await List.findOne({ where: { createdBy: user }, select: ['id'] });
 
       if (!list) {
         const newList = List.create({
