@@ -1,5 +1,4 @@
 import { h, FunctionComponent } from 'preact';
-import LoadingComponent from './loading/loading';
 import { Suspense, lazy } from 'preact/compat';
 interface AsyncRouteComponentProps {
   layout: FunctionComponent;
@@ -12,7 +11,7 @@ const AsyncRouteComponent: FunctionComponent<AsyncRouteComponentProps> = props =
 
   return (
     <Layout>
-      <Suspense fallback={<LoadingComponent />}>
+      <Suspense fallback={<div></div>}>
         <Component />
       </Suspense>
     </Layout>
