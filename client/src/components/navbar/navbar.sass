@@ -1,6 +1,99 @@
-.navbar
-  background: var(--secondary-bg-color)
-  height: 60px
-  display: flex
-  justify-content: center
-  align-items: center
+@import ../../variables
+
+@mixin nav-item-hover
+  &:hover
+    box-shadow: 0 0 5px #0006
+    z-index: 10
+    background: var(--primary-focus-bg-color)
+
+.nav
+  position: absolute
+  width: max-content
+  top: 0
+  left: 0
+  bottom: 0
+  display: grid
+  grid-template-columns: auto 10px
+
+  &-content
+    width: 200px
+    background: var(--secondary-bg-color)
+    display: flex
+    flex-direction: column
+    box-sizing: border-box
+    border-right: solid 1.5px var(--nav-divider-color)
+    transform: translateX(var(--nav-pos))
+    z-index: 10
+
+  &-drag
+    cursor: col-resize
+    transform: translateX(var(--nav-pos))
+
+    &-active
+      cursor: col-resize
+      z-index: 100
+      // background: #f002
+      position: absolute
+      top: 0
+      left: 0
+      width: 100vw
+      height: 100vh
+      user-select: none
+
+  &-spacer-small
+    height: 0.6rem
+  &-spacer
+    margin-top: auto
+
+  &-overlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100vw
+    height: 100vh
+    pointer-events: none
+    background: #0002
+    opacity: 1
+    transition: opacity 200ms ease
+    &.hidden
+      opacity: 0
+
+  .nav-show-btn
+    cursor: pointer
+    position: absolute
+    top: 0
+    left: 0
+    opacity: 1
+    transition: opacity 200ms ease
+    margin: 0.5rem
+    font-size: 1.5rem
+    transform: translateX(calc( var(--nav-pos) + 200px ))
+    &.hidden
+      opacity: 0
+      pointer-events: none
+
+  &-item
+    color: var(--primary-font-color)
+    padding: 0.4rem 1rem
+    cursor: pointer
+    user-select: none
+    transition: background 200ms ease, box-shadow 200ms ease
+    +nav-item-hover
+
+    &:focus
+      text-decoration: none
+
+    &.active
+      color: var(--primary-font-color)
+      background: var(--primary-bg-color)
+      +nav-item-hover
+
+      &:focus
+        text-decoration: none
+
+@media screen and ( min-width: $mobile-break )
+  .nav
+    height: 100vh
+    position: initial
+    &-overlay
+      display: none

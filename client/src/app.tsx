@@ -48,8 +48,8 @@ const App: FunctionComponent<AppProps> = props => {
     setLoading(false);
 
     GuardRoutes({
-      accessToken,
-      loading
+      accessToken: res.body.accessToken,
+      loading: false
     });
   };
 
@@ -69,33 +69,38 @@ const App: FunctionComponent<AppProps> = props => {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <Router
-        onChange={() => {
-          GuardRoutes(authContext);
-        }}
+      <div
+        /**DO NOT REMOVE why ?, because it hides the flickering when the page first loads. */
+        class="start-animation"
       >
-        <AsyncRouteComponent
-          path="/home"
-          layout={MainLayout}
-          component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
-        />
-        <AsyncRouteComponent
-          path="/test"
-          layout={MainLayout}
-          component={() => import(/*webpackChunkName: "TestView"*/ './views/test')}
-        />
-        <AsyncRouteComponent
-          path="/login"
-          layout={AuthLayout}
-          component={() => import(/*webpackChunkName: "LoginView"*/ './views/login')}
-        />
-        <AsyncRouteComponent
-          path="/signUp"
-          layout={AuthLayout}
-          component={() => import(/*webpackChunkName: "signUpView"*/ './views/signUp')}
-        />
-        <RedirectComponent to="/home" default />
-      </Router>
+        <Router
+          onChange={e => {
+            GuardRoutes(authContext);
+          }}
+        >
+          <AsyncRouteComponent
+            path="/home"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
+          />
+          <AsyncRouteComponent
+            path="/test"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "TestView"*/ './views/test')}
+          />
+          <AsyncRouteComponent
+            path="/login"
+            layout={AuthLayout}
+            component={() => import(/*webpackChunkName: "LoginView"*/ './views/login')}
+          />
+          <AsyncRouteComponent
+            path="/signUp"
+            layout={AuthLayout}
+            component={() => import(/*webpackChunkName: "signUpView"*/ './views/signUp')}
+          />
+          <RedirectComponent to="/home" default />
+        </Router>
+      </div>
     </AuthContext.Provider>
   );
 };
