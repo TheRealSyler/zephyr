@@ -1,0 +1,24 @@
+@import ../variables
+
+.main-layout
+  display: block
+  padding: 3rem
+  .main-layout-content
+
+@media screen and ( min-width: $mobile-break  )
+  .main-layout
+    margin: 0 $nav-width + $nav-grab-width
+    display: flex
+    .main-layout-content
+      margin: 0 auto
+      min-width: 650px
+
+@media screen and ( min-width: $mobile-break + 100px  )
+  .main-layout
+    .main-layout-content
+      min-width: 700px
+
+@media screen and ( min-width: $mobile-break + 400px  )
+  .main-layout
+    .main-layout-content
+      min-width: 1000px
