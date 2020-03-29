@@ -4,7 +4,6 @@ import './navbar.sass';
 import NavbarItemComponent from './navbarItem';
 import { LogOut } from '../../auth';
 import { Clamp } from '../../shared/utils.math';
-import IconComponent from '../icon/icon';
 
 interface NavbarComponentProps {}
 interface NavbarComponentState {
@@ -123,15 +122,27 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
   render() {
     return (
       <nav class="nav">
-        {/* <div style="z-index: 10020434242; top: 0; left: 0;background: red; width: 100px; height: 20px; position: absolute;"></div> */}
-
+        <div
+          onClick={() => this.animate(null, false)}
+          class={this.state.isHidden ? 'nav-overlay hidden' : 'nav-overlay'}
+        ></div>
         <div
           class="nav-content"
           onTouchStart={this.startDrag}
           onTouchEnd={this.endDrag}
           onTouchMove={this.moveDrag}
         >
-          <div class="nav-spacer-small"></div>
+          <div class="nav-buttons">
+            <div
+              title={this.state.isHidden ? 'Show Navbar' : 'Hide Navbar'}
+              class={this.state.isHidden ? 'nav-show-btn active' : 'nav-show-btn'}
+              onClick={() => this.animate(null, this.state.isHidden)}
+            >
+              <div class={this.state.isHidden ? 'menu-icon' : 'menu-icon active'}></div>
+            </div>
+          </div>
+
+          <div class="nav-line"></div>
           <NavbarItemComponent icon="home" text="Home" link="/home" />
           <NavbarItemComponent icon="github" text="Test" link="/test" />
 
@@ -155,13 +166,6 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
           onTouchEnd={this.endDrag}
           onTouchMove={this.moveDrag}
         ></div>
-        <div class={this.state.isHidden ? 'nav-overlay hidden' : 'nav-overlay'}></div>
-        <div
-          class={this.state.isHidden ? 'nav-show-btn' : 'nav-show-btn hidden'}
-          onClick={() => this.animate(null, true)}
-        >
-          <IconComponent name="bars" />
-        </div>
       </nav>
     );
   }

@@ -2,19 +2,23 @@
 
 .main-layout
   display: block
-  padding: 3rem
+  padding: 1rem
+  padding-top: 3rem
   .main-layout-content
 
 @media screen and ( min-width: $mobile-break  )
   .main-layout
     margin: 0 $nav-width + $nav-grab-width
     display: flex
+    padding: 2rem
+    padding-top: 3rem
     .main-layout-content
       margin: 0 auto
       min-width: 650px
 
 @media screen and ( min-width: $mobile-break + 100px  )
   .main-layout
+    padding: 3rem
     .main-layout-content
       min-width: 700px
 

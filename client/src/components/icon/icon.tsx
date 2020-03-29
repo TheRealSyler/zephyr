@@ -2,14 +2,12 @@ import { h, FunctionComponent } from 'preact';
 import * as github from '@fortawesome/free-brands-svg-icons/faGithub';
 import * as home from '@fortawesome/free-solid-svg-icons/faHome';
 import * as logout from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
-import * as bars from '@fortawesome/free-solid-svg-icons/faBars';
 import './icon.sass';
 
 const icons = {
   github,
   home,
-  logout,
-  bars
+  logout
 };
 
 export type IconKeys = keyof typeof icons;
