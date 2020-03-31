@@ -2,6 +2,7 @@ import { Configuration } from 'webpack';
 import { Configuration as Dev } from 'webpack-dev-server';
 const resolve = require('path').resolve;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const WebpackBundleAnalyzer = require('webpack-bundle-analyzer');
 
 interface C extends Dev, Configuration {}
@@ -20,7 +21,8 @@ const config: C = {
   plugins: [
     new HtmlWebpackPlugin({
       template: `${__dirname}/public/index.html`
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin()
     // new WebpackBundleAnalyzer.BundleAnalyzerPlugin()
   ],
   module: {
@@ -35,7 +37,14 @@ const config: C = {
       },
       {
         test: /\.tsx?$/,
-        use: ['ts-loader'],
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
+        ],
         exclude: [/node_modules/]
       }
     ]
