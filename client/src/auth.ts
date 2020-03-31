@@ -1,20 +1,28 @@
 import { POST } from './api';
 import { useContext } from 'preact/hooks';
-import { AuthContext } from './app';
 import { route } from 'preact-router';
 import { POST as POST_API } from './shared/api.POST';
 
-export const GuardRoutes = (auth: Partial<AuthContext>) => {
+interface AuthData {
+  accessToken: null | string;
+}
+
+export const AuthData: AuthData = {
+  accessToken: null
+};
+
+export const GuardRoutes = (loading: boolean) => {
+  console.log(loading, window.location.pathname);
   switch (window.location.pathname) {
     case '/login':
     case '/signUp':
-      if (!auth.loading && auth.accessToken) {
+      if (!loading && AuthData.accessToken) {
         route('/home', true);
       }
       break;
 
     default:
-      if (!auth.loading && !auth.accessToken) {
+      if (!loading && !AuthData.accessToken) {
         route('/login', true);
       }
       break;
@@ -28,8 +36,7 @@ export async function Login(username: string, password: string) {
   });
 
   if (res.status === 200) {
-    const authContext = useContext(AuthContext);
-    authContext.setAccessToken(res.body.accessToken);
+    AuthData.accessToken = res.body.accessToken;
 
     route('/home', true);
   }
@@ -44,8 +51,7 @@ export async function SignUp({ username, password, email }: POST_API['auth/signU
   });
 
   if (res.status === 201) {
-    const authContext = useContext(AuthContext);
-    authContext.setAccessToken(res.body.accessToken);
+    AuthData.accessToken = res.body.accessToken;
 
     route('/home', true);
   }
@@ -53,10 +59,7 @@ export async function SignUp({ username, password, email }: POST_API['auth/signU
 }
 export async function LogOut() {
   await POST('auth/logout');
-
-  const authContext = useContext(AuthContext);
-
-  authContext.setAccessToken(null);
+  AuthData.accessToken = null;
 
   route('/login', true);
 }

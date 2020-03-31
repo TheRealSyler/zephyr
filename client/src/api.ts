@@ -1,8 +1,7 @@
-import { AuthContext } from './app';
-import { useContext } from 'preact/hooks';
 import { POST } from './shared/api.POST';
 import { GET } from './shared/api.GET';
 import querystring from 'querystring';
+import { AuthData } from './auth';
 
 const apiUrlBase = 'http://localhost:3000/';
 
@@ -22,10 +21,9 @@ function addAuthHeader(accessToken: null | string, headers: Headers) {
 export async function GET<K extends keyof GET>(
   path: K,
   params?: GET[K]['params']
-): Promise<Response<GET[K]>> {
-  const authContext = useContext(AuthContext);
+): Promise<Response<GET[K]['response']>> {
   const headers: Headers = [];
-  addAuthHeader(authContext.accessToken, headers);
+  addAuthHeader(AuthData.accessToken, headers);
 
   const res = await fetch(
     `${apiUrlBase}${path}${params ? '?' + querystring.stringify(params) : ''}`,
@@ -44,10 +42,8 @@ export async function POST<K extends keyof POST>(
   path: K,
   body?: POST[K]['body']
 ): Promise<Response<POST[K]['response']>> {
-  const authContext = useContext(AuthContext);
-
   const headers: Headers = [['Content-Type', 'application/json']];
-  addAuthHeader(authContext.accessToken, headers);
+  addAuthHeader(AuthData.accessToken, headers);
 
   const res = await fetch(`${apiUrlBase}${path}`, {
     method: 'POST',
