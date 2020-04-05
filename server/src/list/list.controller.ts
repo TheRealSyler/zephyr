@@ -31,7 +31,7 @@ export class ListController {
     const user = await User.findOne({ where: { username: req.token.username }, select: ['id'] });
 
     if (name && user && items) {
-      const list = await List.findOne({ where: { createdBy: user }, select: ['id'] });
+      const list = await List.findOne({ where: { createdBy: user, name }, select: ['id'] });
 
       if (!list) {
         const newList = List.create({
