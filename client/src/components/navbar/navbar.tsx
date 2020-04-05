@@ -145,7 +145,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
               class={this.state.isHidden ? 'nav-show-btn active' : 'nav-show-btn'}
               onClick={() => this.animate(null, this.state.isHidden)}
             >
-              <div class={this.state.isHidden ? 'menu-icon' : 'menu-icon active'}></div>
+              <div class={this.state.isHidden ? 'nav-show-close' : 'nav-show-close active'}></div>
             </div>
           </div>
 
