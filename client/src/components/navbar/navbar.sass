@@ -1,12 +1,7 @@
-@import ../../variables
+@import ../../styles/variables
+@import ../../styles/utils
 
 $nav-transition-time: 200ms
-
-@mixin nav-item-hover
-  &:hover
-    box-shadow: 0 0 5px #0006
-    z-index: 10
-    background: var(--primary-focus-bg-color)
 
 .nav
   position: fixed
@@ -16,7 +11,9 @@ $nav-transition-time: 200ms
   bottom: 0
   display: grid
   grid-template-columns: auto $nav-grab-width
-  z-index: 10000
+
+  &.hidden
+    pointer-events: none
 
   &-content
     width: $nav-width
@@ -26,23 +23,20 @@ $nav-transition-time: 200ms
     box-sizing: border-box
     border-right: solid 1.5px var(--nav-divider-color)
     transform: translateX(var(--nav-pos))
-    z-index: 10
 
   &-drag
     cursor: col-resize
     transform: translateX(var(--nav-pos))
+    pointer-events: all
     &-active
+      pointer-events: all
       cursor: col-resize
-      z-index: 100
       position: absolute
       top: 0
       left: 0
       width: 100vw
       height: 100vh
       user-select: none
-
-  &-spacer
-    margin-top: auto
 
   &-overlay
     position: absolute
@@ -63,15 +57,15 @@ $nav-transition-time: 200ms
     cursor: pointer
     user-select: none
     transition: background $nav-transition-time ease, box-shadow $nav-transition-time ease
-    +nav-item-hover
+    +base-button
 
     &:focus
       text-decoration: none
 
     &.active
+      +base-button
       color: var(--primary-font-color)
       background: var(--primary-bg-color)
-      +nav-item-hover
 
       &:focus
         text-decoration: none
@@ -92,10 +86,11 @@ $nav-transition-time: 200ms
     cursor: pointer
     top: 0
     left: 0
-    z-index: 10
     font-size: 1.5rem
-    +nav-item-hover
+    +base-button
+
     &.active
+      pointer-events: all
       position: absolute
       transform: translateX(#{$nav-width})
 

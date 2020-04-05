@@ -27,9 +27,16 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
   constructor(props: NavbarComponentProps) {
     super(props);
 
+    let isHidden = false;
+    const root = document.documentElement;
+    if (window.innerWidth < 1000 && root) {
+      isHidden = true;
+      root.style.setProperty('--nav-pos', '-200px');
+    }
+
     this.state = {
       isDragging: false,
-      isHidden: false
+      isHidden
     };
   }
 
@@ -121,7 +128,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
 
   render() {
     return (
-      <nav class="nav">
+      <nav class={this.state.isHidden ? 'nav hidden' : 'nav'}>
         <div
           onClick={() => this.animate(null, false)}
           class={this.state.isHidden ? 'nav-overlay hidden' : 'nav-overlay'}
@@ -145,8 +152,9 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
           <div class="nav-line"></div>
           <NavbarItemComponent icon="home" text="Home" link="/home" />
           <NavbarItemComponent icon="github" text="Test" link="/test" />
+          <NavbarItemComponent icon="list" text="List" link="/list" />
 
-          <div class="nav-spacer"></div>
+          <div class="spacer"></div>
           <NavbarItemComponent
             icon="logout"
             flipIconX={true}

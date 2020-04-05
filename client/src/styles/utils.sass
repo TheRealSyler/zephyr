@@ -1,0 +1,19 @@
+
+@mixin base-button
+  background: inherit
+  border: none
+  color: var(--primary-font-color)
+  font-size: 1rem
+  user-select: none
+  transition: background-color 200ms ease, box-shadow 200ms ease
+  cursor: pointer
+  outline: none
+
+  position: relative
+
+  &::-moz-focus-inner
+    border: 0
+  &:focus,
+  &:hover
+    background: var(--primary-focus-bg-color)
+    box-shadow: 0 0 5px #0006
