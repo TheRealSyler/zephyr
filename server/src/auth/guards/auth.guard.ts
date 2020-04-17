@@ -14,6 +14,10 @@ import { AccessTokenPayload, UserRole } from 'src/shared/utils.auth';
 export interface AuthRequest<T = {}> extends Request {
   token: AccessTokenPayload;
   body: T;
+  /**Issued at date. */
+  iat: number;
+  /**Token expiry date. */
+  exp: number;
 }
 
 export const Role = (role: UserRole) => SetMetadata('role', role);
