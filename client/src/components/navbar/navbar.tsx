@@ -4,6 +4,7 @@ import './navbar.sass';
 import NavbarItemComponent from './navbarItem';
 import { LogOut } from '../../auth';
 import { Clamp } from '../../shared/utils.math';
+import IconComponent from '../icon/icon';
 
 interface NavbarComponentProps {}
 interface NavbarComponentState {
@@ -36,7 +37,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
 
     this.state = {
       isDragging: false,
-      isHidden
+      isHidden,
     };
   }
 
@@ -55,7 +56,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
       startTime: Date.now(),
       root,
       multiplier,
-      time: this.maxAnimTime * multiplier
+      time: this.maxAnimTime * multiplier,
     });
   }
 
@@ -77,7 +78,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
           time,
           multiplier,
           startTime,
-          startPos
+          startPos,
         })
       );
     } else {
@@ -142,7 +143,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
           <div class="nav-buttons">
             <div
               title={this.state.isHidden ? 'Show Navbar' : 'Hide Navbar'}
-              class={this.state.isHidden ? 'nav-show-btn active' : 'nav-show-btn'}
+              class={this.state.isHidden ? 'nav-btn active' : 'nav-btn'}
               onClick={() => this.animate(null, this.state.isHidden)}
             >
               <div class={this.state.isHidden ? 'nav-show-close' : 'nav-show-close active'}></div>
@@ -151,10 +152,15 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
 
           <div class="nav-line"></div>
           <NavbarItemComponent icon="home" text="Home" link="/home" />
-          <NavbarItemComponent icon="github" text="Test" link="/test" />
           <NavbarItemComponent icon="list" text="List" link="/list" />
 
           <div class="spacer"></div>
+          <NavbarItemComponent
+            icon="github"
+            text="Source Code"
+            link="https://github.com/TheRealSyler/zephyr"
+          />
+
           <NavbarItemComponent
             icon="logout"
             flipIconX={true}
@@ -162,6 +168,7 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
             onClick={LogOut}
             link="/logout"
           />
+
           <div class="nav-spacer-small"></div>
         </div>
         <div

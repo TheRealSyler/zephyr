@@ -9,6 +9,8 @@ html
   --primary-color: #FF2266
   --secondary-color: #669999
   --default-animation-length: 150ms
+  --divider-color: #444
+  --faint-color: #aaa
 
   --input-font-color: var(--primary-font-color)
   --input-bg-color: var(--primary-bg-color)
@@ -30,7 +32,13 @@ html
   --link-active-bg-color: #bee
 
   --nav-pos: 0px
-  --nav-divider-color: #444
+
+.primary-color
+  color: var(--primary-color)
+.secondary-color
+  color: var(--secondary-color)
+.faint-color
+  color: var(--faint-color)
 
 body
   margin: 0
@@ -39,6 +47,9 @@ body
   color: var(--primary-font-color)
 *
   font-family: Roboto, sans-serif
+
+.spacer
+  margin: auto
 
 // TODO link styling
 a

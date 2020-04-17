@@ -21,7 +21,7 @@ $nav-transition-time: 200ms
     display: flex
     flex-direction: column
     box-sizing: border-box
-    border-right: solid 1.5px var(--nav-divider-color)
+    border-right: solid 1.5px var(--divider-color)
     transform: translateX(var(--nav-pos))
 
   &-drag
@@ -63,7 +63,6 @@ $nav-transition-time: 200ms
       text-decoration: none
 
     &.active
-      +base-button
       color: var(--primary-font-color)
       background: var(--primary-bg-color)
 
@@ -74,13 +73,13 @@ $nav-transition-time: 200ms
     height: 0.6rem
   &-line
     height: 1px
-    background: var(--nav-divider-color)
+    background: var(--divider-color)
   &-buttons
     height: 40px
     display: flex
     position: relative
     flex-direction: row-reverse
-  &-show-btn
+  &-btn
     padding: 8px
     height: 25px
     cursor: pointer
@@ -88,6 +87,8 @@ $nav-transition-time: 200ms
     left: 0
     font-size: 1.5rem
     +base-button
+
+    font-size: 25px
 
     &.active
       pointer-events: all
