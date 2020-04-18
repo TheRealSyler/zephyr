@@ -1,4 +1,4 @@
-import { h, FunctionComponent, createContext } from 'preact';
+import { h, FunctionComponent } from 'preact';
 
 import Router, { route } from 'preact-router';
 
@@ -8,28 +8,25 @@ import { POST } from './api';
 import { useState, useEffect } from 'preact/hooks';
 import MainLayout from './layouts/main';
 import AuthLayout from './layouts/auth';
-import { GuardRoutes, AuthData } from './auth';
+import { GuardRoutes, decodeAccessToken } from './auth';
 
 interface AppProps {}
 
-// TODO: Add messages to entire app, use the context api.
+// TODO ?: Add messages to entire app, use the context api.
 
-const App: FunctionComponent<AppProps> = props => {
+const App: FunctionComponent<AppProps> = () => {
   const [loading, setLoading] = useState(true);
 
   const refreshToken = async () => {
     const res = await POST('auth/refreshToken');
     if (res.status === 200) {
-      AuthData.accessToken = res.body.accessToken;
-
-      try {
-        const token = JSON.parse(atob(res.body.accessToken.split('.')[1]));
-        const timeToNextRefresh = token.exp * 1000 - Date.now() - 1000;
-        console.log(timeToNextRefresh);
+      const payload = decodeAccessToken(res.body.accessToken);
+      if (payload) {
+        const timeToNextRefresh = payload.exp! * 1000 - Date.now() - 1000;
         setTimeout(() => {
           refreshToken();
         }, timeToNextRefresh);
-      } catch {
+      } else {
         route('/login', true);
       }
     }
@@ -51,7 +48,7 @@ const App: FunctionComponent<AppProps> = props => {
       class="start-animation"
     >
       <Router
-        onChange={e => {
+        onChange={(e) => {
           GuardRoutes(loading);
         }}
       >
@@ -61,14 +58,14 @@ const App: FunctionComponent<AppProps> = props => {
           component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
         />
         <AsyncRouteComponent
-          path="/test"
+          path="/movie/:name"
           layout={MainLayout}
-          component={() => import(/*webpackChunkName: "TestView"*/ './views/test')}
+          component={() => import(/*webpackChunkName: "movieView"*/ './views/movie')}
         />
         <AsyncRouteComponent
           path="/list"
           layout={MainLayout}
-          component={() => import(/*webpackChunkName: "ListView"*/ './views/list')}
+          component={() => import(/*webpackChunkName: "ListView"*/ './views/list/list')}
         />
         <AsyncRouteComponent
           path="/login"
@@ -80,6 +77,7 @@ const App: FunctionComponent<AppProps> = props => {
           layout={AuthLayout}
           component={() => import(/*webpackChunkName: "signUpView"*/ './views/signUp')}
         />
+
         <RedirectComponent to="/home" default />
       </Router>
     </div>

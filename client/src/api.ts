@@ -23,17 +23,17 @@ export async function GET<K extends keyof GET>(
   params?: GET[K]['params']
 ): Promise<Response<GET[K]['response']>> {
   const headers: Headers = [];
-  addAuthHeader(AuthData.accessToken, headers);
+  addAuthHeader(AuthData.rawAccessToken, headers);
 
   const res = await fetch(
     `${apiUrlBase}${path}${params ? '?' + querystring.stringify(params) : ''}`,
     {
-      headers
+      headers,
     }
   );
   return {
     status: res.status,
-    body: await res.json()
+    body: await res.json(),
   };
 }
 
@@ -43,17 +43,17 @@ export async function POST<K extends keyof POST>(
   body?: POST[K]['body']
 ): Promise<Response<POST[K]['response']>> {
   const headers: Headers = [['Content-Type', 'application/json']];
-  addAuthHeader(AuthData.accessToken, headers);
+  addAuthHeader(AuthData.rawAccessToken, headers);
 
   const res = await fetch(`${apiUrlBase}${path}`, {
     method: 'POST',
     body: JSON.stringify(body || {}),
     credentials: 'include',
-    headers
+    headers,
   });
 
   return {
     status: res.status,
-    body: await res.json()
+    body: await res.json(),
   };
 }

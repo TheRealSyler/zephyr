@@ -1,18 +1,18 @@
 import { POST } from './api';
-import { useContext } from 'preact/hooks';
 import { route } from 'preact-router';
 import { POST as POST_API } from './shared/api.POST';
-
+import { AccessTokenPayload, UserRole } from './shared/utils.auth';
 interface AuthData {
-  accessToken: null | string;
+  accessToken: null | AccessTokenPayload;
+  rawAccessToken: null | string;
 }
 
 export const AuthData: AuthData = {
-  accessToken: null
+  accessToken: null,
+  rawAccessToken: null,
 };
 
 export const GuardRoutes = (loading: boolean) => {
-  console.log(loading, window.location.pathname);
   switch (window.location.pathname) {
     case '/login':
     case '/signUp':
@@ -29,15 +29,21 @@ export const GuardRoutes = (loading: boolean) => {
   }
 };
 
+export const RoleGuard = (role: UserRole) => {
+  return (AuthData.accessToken?.role || 0) >= role;
+};
+
 export async function Login(username: string, password: string) {
   const res = await POST('auth/login', {
     username,
-    password
+    password,
   });
 
   if (res.status === 200) {
-    AuthData.accessToken = res.body.accessToken;
-
+    const success = decodeAccessToken(res.body.accessToken);
+    if (success) {
+      route('/home', true);
+    }
     route('/home', true);
   }
   return res;
@@ -47,13 +53,14 @@ export async function SignUp({ username, password, email }: POST_API['auth/signU
   const res = await POST('auth/signUp', {
     username,
     password,
-    email
+    email,
   });
 
   if (res.status === 201) {
-    AuthData.accessToken = res.body.accessToken;
-
-    route('/home', true);
+    const success = decodeAccessToken(res.body.accessToken);
+    if (success) {
+      route('/home', true);
+    }
   }
   return res;
 }
@@ -62,4 +69,18 @@ export async function LogOut() {
   AuthData.accessToken = null;
 
   route('/login', true);
+}
+
+export function decodeAccessToken(token: string) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])) as AccessTokenPayload;
+    AuthData.accessToken = payload;
+    AuthData.rawAccessToken = token;
+    return payload;
+  } catch {
+    AuthData.accessToken = null;
+    AuthData.rawAccessToken = null;
+    route('/login', true);
+    return false;
+  }
 }
