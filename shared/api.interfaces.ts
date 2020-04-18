@@ -1,8 +1,10 @@
 export interface List {
   name: string;
   description: string;
+  movies: Movie[];
 }
 export interface Movie {
+  id?: number;
   name: string;
   description: string;
 }

@@ -1,4 +1,4 @@
-import { SimpleUser, ListItems, ListRemoveItems, Movie } from './api.interfaces';
+import { SimpleUser, ListItems, ListRemoveItems, Movie, List } from './api.interfaces';
 import { UserRole } from './utils.auth';
 import { SuccessResponse } from './api.response.success';
 
@@ -54,6 +54,10 @@ export interface POST {
       name: string;
       items: ListItems;
     };
+    response: {};
+  };
+  'list/edit': {
+    body: Partial<List>;
     response: {};
   };
   'list/remove': {

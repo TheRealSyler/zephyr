@@ -21,8 +21,16 @@ export enum UserRole {
 export interface RefreshTokenPayload {
   username: string;
   tokenVersion: number;
+  /**Issued at date. */
+  iat?: number;
+  /**Token expiry date. */
+  exp?: number;
 }
 export interface AccessTokenPayload {
   username: string;
   role: UserRole;
+  /**Issued at date. */
+  iat?: number;
+  /**Token expiry date. */
+  exp?: number;
 }
