@@ -152,7 +152,7 @@ export class MovieController {
   @Post('/edit')
   async editMovie(
     @Req() req: Request<POST['movie/edit']['body']>
-  ): Promise<POST['movie/create']['response']> {
+  ): Promise<POST['movie/edit']['response']> {
     const { name, ...edits } = req.body;
 
     if (name) {

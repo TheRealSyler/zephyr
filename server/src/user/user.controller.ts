@@ -16,9 +16,9 @@ import { MovieSuggestion } from 'src/entities/movieSuggestion.entity';
 import { GET } from 'src/shared/api.GET';
 import { List } from 'src/entities/list.entity';
 
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
-  @UseGuards(AuthGuard)
   @Post('/setRole')
   async setRole(
     @Req() req: AuthRequest<Partial<POST['user/setRole']['body']>>
@@ -44,7 +44,7 @@ export class UserController {
 
   @Get('/list')
   async getUsersLists(@Req() req: AuthRequest): Promise<GET['user/list']['response']> {
-    const username = req.query.username || req?.token?.username;
+    const username: string = req.query.username || req?.token?.username;
 
     if (!username) throw new BadRequestException();
 
