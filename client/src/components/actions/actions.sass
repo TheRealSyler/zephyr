@@ -1,0 +1,23 @@
+@import ../../styles/utils
+@import ../../styles/variables
+
+.actions
+  background: var(--secondary-bg-color)
+  border-radius: 5px
+  overflow: hidden
+  margin-top: 2rem
+  display: flex
+  align-items: center
+
+  &-btn
+    padding: 8px
+    top: 0
+    left: 0
+    +base-button
+
+  &-text
+    display: none
+
+@media  screen and ( min-width: $mobile-break )
+  .actions-text
+    display: initial
