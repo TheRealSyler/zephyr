@@ -4,7 +4,6 @@ import './navbar.sass';
 import NavbarItemComponent from './navbarItem';
 import { LogOut } from '../../auth';
 import { Clamp } from '../../shared/utils.math';
-import IconComponent from '../icon/icon';
 
 interface NavbarComponentProps {}
 interface NavbarComponentState {
