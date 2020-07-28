@@ -20,13 +20,13 @@ function addAuthHeader(accessToken: null | string, headers: Headers) {
 
 export async function GET<K extends keyof GET>(
   path: K,
-  params?: GET[K]['params']
+  query?: GET[K]['query']
 ): Promise<Response<GET[K]['response']>> {
   const headers: Headers = [];
   addAuthHeader(AuthData.rawAccessToken, headers);
 
   const res = await fetch(
-    `${apiUrlBase}${path}${params ? '?' + querystring.stringify(params) : ''}`,
+    `${apiUrlBase}${path}${query ? '?' + querystring.stringify(query) : ''}`,
     {
       headers,
     }
