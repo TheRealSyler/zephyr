@@ -9,8 +9,7 @@ import {
 } from 'typeorm';
 import { hash } from 'argon2';
 
-import { List } from './list.entity';
-import { MovieSuggestion } from './movieSuggestion.entity';
+import { Article } from './article.entity';
 import { UserRole } from 'src/shared/utils.auth';
 
 @Entity()
@@ -33,16 +32,10 @@ export class User extends BaseEntity {
   role: UserRole;
 
   @OneToMany(
-    type => List,
-    list => list.createdBy
+    type => Article,
+    article => article.createdBy
   )
-  lists: List[];
-
-  @ManyToOne(
-    type => MovieSuggestion,
-    suggestion => suggestion.suggestedBy
-  )
-  suggestions: MovieSuggestion[];
+  articles: Article[];
 
   @BeforeInsert()
   async hashPassword() {
