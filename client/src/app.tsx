@@ -8,7 +8,7 @@ import { POST } from './api';
 import { useState, useEffect } from 'preact/hooks';
 import MainLayout from './layouts/main';
 import AuthLayout from './layouts/auth';
-import { GuardRoutes, decodeAccessToken } from './auth';
+import { decodeAccessToken } from './auth';
 
 interface AppProps {}
 
@@ -32,8 +32,6 @@ const App: FunctionComponent<AppProps> = () => {
     }
 
     setLoading(false);
-
-    GuardRoutes(false);
   };
 
   useEffect(() => {
@@ -47,26 +45,13 @@ const App: FunctionComponent<AppProps> = () => {
       /**DO NOT REMOVE why ?, because it hides the flickering when the page first loads. */
       class="start-animation"
     >
-      <Router
-        onChange={(e) => {
-          GuardRoutes(loading);
-        }}
-      >
+      <Router>
         <AsyncRouteComponent
           path="/home"
           layout={MainLayout}
           component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
         />
-        <AsyncRouteComponent
-          path="/movie/:name"
-          layout={MainLayout}
-          component={() => import(/*webpackChunkName: "movieView"*/ './views/movie')}
-        />
-        <AsyncRouteComponent
-          path="/list"
-          layout={MainLayout}
-          component={() => import(/*webpackChunkName: "ListView"*/ './views/list/list')}
-        />
+
         <AsyncRouteComponent
           path="/login"
           layout={AuthLayout}

@@ -12,22 +12,22 @@ export const AuthData: AuthData = {
   rawAccessToken: null,
 };
 
-export const GuardRoutes = (loading: boolean) => {
-  switch (window.location.pathname) {
-    case '/login':
-    case '/signUp':
-      if (!loading && AuthData.accessToken) {
-        route('/home', true);
-      }
-      break;
+// export const GuardRoutes = (loading: boolean) => {
+//   switch (window.location.pathname) {
+//     case '/login':
+//     case '/signUp':
+//       if (!loading && AuthData.accessToken) {
+//         route('/home', true);
+//       }
+//       break;
 
-    default:
-      if (!loading && !AuthData.accessToken) {
-        route('/login', true);
-      }
-      break;
-  }
-};
+//     default:
+//       if (!loading && !AuthData.accessToken) {
+//         route('/login', true);
+//       }
+//       break;
+//   }
+// };
 
 export const RoleGuard = (role: UserRole) => {
   return (AuthData.accessToken?.role || 0) >= role;
