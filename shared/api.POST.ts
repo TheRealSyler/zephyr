@@ -1,4 +1,4 @@
-import { SimpleUser, ListItems, ListRemoveItems, Movie, List } from './api.interfaces';
+import { SimpleUser } from './api.interfaces';
 import { UserRole } from './utils.auth';
 import { SuccessResponse } from './api.response.success';
 
@@ -41,53 +41,28 @@ export interface POST {
       accessToken: string;
     };
   };
-  'list/create': {
-    body: {
-      name: string;
-      items: ListItems;
-      description: string | null;
-    };
-    response: {};
-  };
-  'list/add': {
-    body: {
-      name: string;
-      items: ListItems;
-    };
-    response: {};
-  };
-  'list/edit': {
-    body: Partial<List>;
-    response: {};
-  };
-  'list/remove': {
-    body: {
-      name: string;
-      items: ListRemoveItems;
-    };
-    response: {};
-  };
-  'movie/create': {
-    body: Partial<Movie>;
-    response: {};
-  };
-  'movie/edit': {
-    body: Partial<Movie>;
-    response: {};
-  };
-  'movie/suggest': {
-    body: {
-      movie: string;
-      suggestion: string;
-      addToSuggested: boolean;
-    };
-    response: {};
-  };
+
   'user/setRole': {
     body: {
       newRole: UserRole;
       username?: string;
       adminPassword?: string;
+    };
+    response: SuccessResponse;
+  };
+  article: {
+    body: {
+      name: string;
+      content: string;
+      title: string;
+    };
+    response: SuccessResponse;
+  };
+  'article/edit': {
+    body: {
+      name: string;
+      content?: string;
+      title?: string;
     };
     response: SuccessResponse;
   };

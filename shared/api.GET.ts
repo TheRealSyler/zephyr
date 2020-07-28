@@ -1,4 +1,4 @@
-import { List, Movie, MovieSuggestion } from './api.interfaces';
+import { Article } from './api.interfaces';
 
 export interface GET {
   // DON'T Use [key: string]: { response: any }; the types in the front end will brake.
@@ -7,22 +7,16 @@ export interface GET {
     response: {
       test: 'awd';
     };
-    params: {};
+    query: {};
   };
-  movie: {
-    response: Movie;
-    params: { name: string };
-  };
-  'movie/all': {
-    response: Movie[];
-    params: {};
-  };
-  'user/suggestions': {
-    response: MovieSuggestion[];
-    params: { username: string };
-  };
-  'user/list': {
-    response: List[];
-    params: { username: string };
+  article: {
+    response: Article | Article[];
+    query: {
+      name?: string;
+      user?: string;
+      sort?: 'newest' | 'oldest';
+      page?: string;
+      results?: string;
+    };
   };
 }
