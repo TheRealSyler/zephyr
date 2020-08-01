@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "concurrently \"cd server && yarn start:dev\" \"cd client && yarn start\""
+    "start": "concurrently \"cd server && yarn start:dev\" \"cd client && yarn start\"",
+    "postinstall": "cd server && yarn && cd ../client && yarn"
   },
   "dependencies": {
     "concurrently": "^5.1.0",
