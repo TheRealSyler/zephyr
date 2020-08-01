@@ -1,0 +1,46 @@
+//import css-variables from ../../index
+
+$a: #434850
+$b: #73849e
+
+.article-card
+  color: var(--primary-font-color)
+  text-decoration: none
+
+  &:hover
+    .article-card
+      &-title
+        transform: skewX(25deg) scale(1.1)
+
+  &-title
+    transition: transform var(--default-animation-length) ease
+    transform: skewX(25deg)
+    background: var(--secondary-bg-color)
+    font-size: 1.4rem
+
+    color: var(--primary-color)
+    box-shadow: 0 4px 5px #0003
+    > *
+      max-height: 5.8rem
+      max-width: 100%
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+      margin: 0 2rem
+      padding: 0.3rem
+      transform: skewX(-25deg)
+
+  &-description
+    overflow: auto
+    text-overflow: ellipsis
+
+    padding: 1rem
+    margin: 0 25px
+    margin-left: 50px
+    margin-top: -10px
+    padding-top: 20px
+    color: var(--faint-color)
+    background: var(--tertiary-bg-color)
+    height: 4rem
+    border-radius: 0 0 2px 2px
