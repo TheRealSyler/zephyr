@@ -18,7 +18,7 @@ const icons = {
 
 export type IconKeys = keyof typeof icons;
 
-const IconComponent: FunctionComponent<{ name: IconKeys; flipX?: boolean }> = (props) => {
+const Icon: FunctionComponent<{ name: IconKeys; flipX?: boolean }> = (props) => {
   const icon = icons[props.name];
   if (!icon) {
     return <div class="icon"> </div>;
@@ -35,4 +35,4 @@ const IconComponent: FunctionComponent<{ name: IconKeys; flipX?: boolean }> = (p
   );
 };
 
-export default IconComponent;
+export default Icon;
