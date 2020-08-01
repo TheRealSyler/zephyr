@@ -1,10 +1,10 @@
 import { h, FunctionComponent } from 'preact';
 import './loading.sass';
 
-interface LoadingComponentProps {}
+interface LoadingProps {}
 
-const LoadingComponent: FunctionComponent<LoadingComponentProps> = props => {
+const Loading: FunctionComponent<LoadingProps> = (props) => {
   return <div class="loading"></div>;
 };
 
-export default LoadingComponent;
+export default Loading;

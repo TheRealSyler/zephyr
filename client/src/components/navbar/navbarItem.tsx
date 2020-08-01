@@ -1,8 +1,8 @@
 import { h, FunctionComponent } from 'preact';
-import IconComponent, { IconKeys } from '../icon/icon';
-import LinkComponent from '../link/link';
+import Icon, { IconKeys } from '../icon/icon';
+import Link from '../link/link';
 
-interface NavbarItemComponentProps {
+interface NavbarItemProps {
   icon: IconKeys;
   text: string;
   link?: string;
@@ -10,13 +10,13 @@ interface NavbarItemComponentProps {
   onClick?: (e: MouseEvent) => void;
 }
 
-const NavbarItemComponent: FunctionComponent<NavbarItemComponentProps> = props => {
+const NavbarItem: FunctionComponent<NavbarItemProps> = (props) => {
   const { icon, text, link, flipIconX, onClick } = props;
   return (
-    <LinkComponent href={link} onClick={onClick} class="nav-item">
-      <IconComponent name={icon} flipX={flipIconX} /> {text}
-    </LinkComponent>
+    <Link href={link} onClick={onClick} class="nav-item">
+      <Icon name={icon} flipX={flipIconX} /> {text}
+    </Link>
   );
 };
 
-export default NavbarItemComponent;
+export default NavbarItem;

@@ -1,13 +1,13 @@
 import { h, FunctionComponent, ComponentChildren } from 'preact';
 import './tooltip.sass';
 
-interface TooltipComponentProps {
+interface TooltipProps {
   visible?: boolean;
   content: string | number | h.JSX.Element | ComponentChildren;
   // position?: 'left' | 'top' | 'right' | 'bottom';
 }
 
-const TooltipComponent: FunctionComponent<TooltipComponentProps> = props => {
+const Tooltip: FunctionComponent<TooltipProps> = (props) => {
   const { content, visible = true } = props;
   return (
     <div class="tooltip-wrapper">
@@ -19,4 +19,4 @@ const TooltipComponent: FunctionComponent<TooltipComponentProps> = props => {
   );
 };
 
-export default TooltipComponent;
+export default Tooltip;

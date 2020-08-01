@@ -1,12 +1,12 @@
 import { h, FunctionComponent } from 'preact';
 
-interface LinkComponentProps extends h.JSX.HTMLAttributes<HTMLAnchorElement> {}
+interface LinkProps extends h.JSX.HTMLAttributes<HTMLAnchorElement> {}
 
-const LinkComponent: FunctionComponent<LinkComponentProps> = props => {
+const Link: FunctionComponent<LinkProps> = (props) => {
   return <a {...props} class={addIsActive(props)}></a>;
 };
 
-export default LinkComponent;
-function addIsActive(props: LinkComponentProps) {
-  return (window.location.pathname === props.href ? 'active ' : '') + (props.class || '');
+export default Link;
+function addIsActive(props: LinkProps) {
+  return (window.location.pathname === props.href ? 'link active ' : 'link ') + (props.class || '');
 }
