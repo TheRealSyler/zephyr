@@ -86,7 +86,8 @@ export class AuthService {
   addRefreshTokenToRes(res: Response, token: string) {
     res.cookie('jid', token, {
       httpOnly: true,
-      path: '/auth/refreshToken'
+      path: '/auth/refreshToken',
+      sameSite: 'strict'
     });
   }
 
