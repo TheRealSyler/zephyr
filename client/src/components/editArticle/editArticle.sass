@@ -1,0 +1,94 @@
+//import css-variables from ../../index
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap')
+@import ../../styles/utils
+@import ../../styles/variables
+
+.new-article
+  display: flex
+  flex-direction: column
+  padding: 2rem  1rem
+  margin: 0 auto
+  background: var(--secondary-bg-color)
+  max-width: var(--max-article-width)
+  border-radius: var(--default-border-radius)
+
+  +markdown
+
+  input
+    outline: none
+    filter: none
+    width: 100%
+  &-buttons
+
+    margin: 1.4rem 0
+    background: var(--primary-bg-color)
+    padding: 0.6rem 0
+    border-radius: var(--default-border-radius)
+    display: flex
+    justify-content: space-evenly
+    position: relative
+    button
+      cursor: pointer
+      border: none
+      font-size: 1rem
+      padding: 0.5rem 1rem
+      color: var(--button-font-color)
+      background: var(--primary-color)
+      transition: transform var(--default-animation-length) ease
+      outline: none
+      border-radius: 2px
+      &.active
+        background: var(--secondary-bg-color)
+      &.publish
+        background: var(--secondary-color)
+      &:hover,
+      &:focus
+        transform: scale(1.05)
+      &:disabled
+        background: inherit
+        color: var(--faint-color)
+        transform: none
+        cursor: default
+
+  textarea
+    background: var(--primary-bg-color)
+    border: 1px solid transparent
+    width: 100%
+    resize: none
+    color: var(--primary-font-color)
+    padding: 0.5rem
+    outline: none
+    border-radius: var(--default-border-radius)
+    transition: border var(--default-animation-length) ease
+    font-family: 'Roboto Mono', monospace
+    height: 75vh
+    min-width: 40px
+    box-sizing: border-box
+    &:focus
+      border: 1px solid var(--secondary-color)
+
+@media screen and ( min-width: $mobile-break  )
+  .new-article
+    padding: 2rem 3rem
+
+    &-buttons
+
+      margin: 1.4rem 50px
+      background: var(--primary-bg-color)
+      padding: 0.6rem 4rem
+      &::before,
+      &::after
+        position: absolute
+        content: ' '
+        top: 0
+        bottom: -1px
+        width: 60px
+
+      &::before
+        background: linear-gradient(90deg,var(--primary-color) 45%, var(--primary-bg-color) 46%)
+        left: -30px
+        transform: skewX(45deg)
+      &::after
+        background: linear-gradient(90deg, var(--primary-bg-color) 45%, var(--primary-color)  46%)
+        right: -30px
+        transform: skewX(-45deg)
