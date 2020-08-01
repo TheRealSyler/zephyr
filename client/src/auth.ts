@@ -29,9 +29,9 @@ export const AuthData: AuthData = {
 //   }
 // };
 
-export const RoleGuard = (role: UserRole) => {
-  return (AuthData.accessToken?.role || 0) >= role;
-};
+// export const RoleGuard = (role: UserRole) => {
+//   return (AuthData.accessToken?.role || 0) >= role;
+// };
 
 export async function Login(username: string, password: string) {
   const res = await POST('auth/login', {
@@ -63,12 +63,6 @@ export async function SignUp({ username, password, email }: POST_API['auth/signU
     }
   }
   return res;
-}
-export async function LogOut() {
-  await POST('auth/logout');
-  AuthData.accessToken = null;
-
-  route('/login', true);
 }
 
 export function decodeAccessToken(token: string) {
