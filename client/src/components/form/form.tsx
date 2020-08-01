@@ -1,11 +1,12 @@
-import { h, Component, createRef } from 'preact';
+import { h, Component, createRef, RefObject } from 'preact';
 import './form.sass';
-import TooltipComponent from '../tooltip/tooltip';
+import Tooltip from '../tooltip/tooltip';
 
 interface Field {
   value?: string | number;
   placeholder?: string;
   type?: string;
+  name?: string;
   required?: boolean;
   /**Return an empty array if the field is valid. */
   validate?: (text: string) => string[];
@@ -19,21 +20,34 @@ type FormStateValue = {
 
 type FormFields = { [key: string]: Field };
 
-type FormFieldPropsKey<T extends FormFields> = keyof FormComponentProps<T>['fields'];
+type FormFieldPropsKey<T extends FormFields> = keyof FormProps<T>['fields'];
 
-interface FormComponentProps<T extends FormFields> {
+interface FormProps<T extends FormFields> {
   fields: T;
   focus?: keyof T;
   class?: string;
-  customButtons?: h.JSX.Element;
-  submit: {
-    /**Submit Button text */
-    text: string;
-    function: (data: FormComponentState<T>['fields']) => Promise<string[]>;
-  };
+  customElement?:
+    | ((canSubmit: boolean, setCanSubmit: Form<any>['checkCanSubmit']) => h.JSX.Element)
+    | h.JSX.Element;
+  // defaultCanSubmit?: boolean;
+  hideRequiredText?: boolean;
+  overwriteFormClass?: string;
+  overwriteButtonClass?: string;
+  overwriteElementClass?: string;
+  overwriteErrorClass?: string;
+  overwriteInputClass?: string;
+  errors?: string[];
+  submit:
+    | {
+        /**Submit Button text */
+        text: string;
+        /**Used for error checking the fields */
+        function: (data: FormState<T>['fields']) => Promise<string[]>;
+      }
+    | ((data: FormState<T>['fields']) => Promise<string[]>);
 }
 
-type FormComponentState<T extends FormFields> = {
+type FormState<T extends FormFields> = {
   fields: {
     [key in FormFieldPropsKey<T>]: FormStateValue;
   };
@@ -45,29 +59,26 @@ type FormOnInput<T extends FormFields> = (
   key: FormFieldPropsKey<T>
 ) => h.JSX.GenericEventHandler<HTMLInputElement>;
 
-class FormComponent<T extends FormFields> extends Component<
-  FormComponentProps<T>,
-  FormComponentState<T>
-> {
+class Form<T extends FormFields> extends Component<FormProps<T>, FormState<T>> {
   focus = createRef<HTMLInputElement>();
 
-  constructor(props: FormComponentProps<T>) {
+  constructor(props: FormProps<T>) {
     super(props);
-    const fields = {} as FormComponentState<T>['fields'];
+    const fields = {} as FormState<T>['fields'];
     for (const key in this.props.fields) {
       if (this.props.fields.hasOwnProperty(key)) {
         const field = this.props.fields[key];
         fields[key] = {
           value: field.value || '',
           isValid: true,
-          validationErrors: []
+          validationErrors: [],
         };
       }
     }
     this.state = {
       fields,
-      canSubmit: false,
-      errors: []
+      canSubmit: false, // props.defaultCanSubmit ||
+      errors: [],
     };
   }
 
@@ -80,12 +91,16 @@ class FormComponent<T extends FormFields> extends Component<
 
   onSubmit = async (e: Event) => {
     e.preventDefault();
+
+    const func =
+      typeof this.props.submit === 'function' ? this.props.submit : this.props.submit.function;
+
     this.setState({
-      errors: await this.props.submit.function(this.state.fields)
+      errors: await func(this.state.fields),
     });
   };
 
-  onInput: FormOnInput<T> = key => e => {
+  onInput: FormOnInput<T> = (key) => (e) => {
     if (e.target) {
       const { value } = e.target as any;
       this.handleInput(key, value);
@@ -105,16 +120,25 @@ class FormComponent<T extends FormFields> extends Component<
     fields[key] = {
       isValid,
       value,
-      validationErrors
+      validationErrors,
     };
     this.setState({
       fields,
-      canSubmit: this.checkCanSubmit()
+      canSubmit: this._checkCanSubmit(),
     });
   }
-  checkCanSubmit() {
-    let canSubmit = true;
 
+  checkCanSubmit = () => {
+    this.setState({
+      canSubmit: this._checkCanSubmit(),
+    });
+  };
+
+  private _checkCanSubmit = () => {
+    let canSubmit = true;
+    if ((this.props.errors?.length || 0) > 0) {
+      return false;
+    }
     for (const key in this.state.fields) {
       if (this.state.fields.hasOwnProperty(key)) {
         const field = this.state.fields[key];
@@ -124,11 +148,21 @@ class FormComponent<T extends FormFields> extends Component<
       }
     }
     return canSubmit;
-  }
+  };
 
   render() {
+    const {
+      overwriteInputClass,
+      overwriteFormClass,
+      overwriteElementClass,
+      overwriteErrorClass,
+      hideRequiredText,
+      submit,
+      customElement,
+      focus,
+      overwriteButtonClass,
+    } = this.props;
     const fields = [];
-
     for (const key in this.props.fields) {
       if (this.props.fields.hasOwnProperty(key)) {
         const fieldProps = this.props.fields[key];
@@ -149,47 +183,59 @@ class FormComponent<T extends FormFields> extends Component<
           <input
             {...fieldProps}
             placeholder={`${fieldProps.placeholder}${fieldProps.required ? ' *' : ''}`}
-            ref={this.props.focus === key ? this.focus : undefined}
+            ref={focus === key ? this.focus : undefined}
             key={key}
-            class={`input mt-1 ${isValid ? '' : 'invalid'}`}
+            class={`${overwriteInputClass || 'input mt-1'} ${isValid ? '' : 'invalid'}`}
             value={this.state.fields[key].value}
             onInput={this.onInput(key)}
           />
         );
         fields.push(
-          <TooltipComponent visible={errors.length > 0} content={errors}>
+          <Tooltip visible={errors.length > 0} content={errors}>
             {input}
-          </TooltipComponent>
+          </Tooltip>
         );
       }
     }
 
     const errors = [];
-
-    for (let i = 0; i < this.state.errors.length; i++) {
-      const error = this.state.errors[i];
+    const allErrors = this.state.errors.concat(this.props.errors || []);
+    for (let i = 0; i < allErrors.length; i++) {
+      const error = allErrors[i];
       errors.push(
-        <div class="form-error" key={i}>
+        <div class={overwriteErrorClass || 'form-error'} key={i}>
           {error}
         </div>
       );
     }
 
     return (
-      <form method="POST" class={`form ${this.props.class || ''}`} onSubmit={this.onSubmit}>
+      <form
+        method="POST"
+        class={`${overwriteFormClass || 'form'} ${this.props.class || ''}`}
+        onSubmit={this.onSubmit}
+      >
         {fields}
-        <div class="form-required-text">* Field Are Required.</div>
+        {!hideRequiredText && <div class="form-required-text">* Field Are Required.</div>}
         {errors}
-        <div class="form-buttons mt-2">
-          <button class="button" type="submit" disabled={!this.state.canSubmit}>
-            {this.props.submit.text}
-          </button>
+        <div class={overwriteElementClass || 'form-buttons mt-2'}>
+          {typeof submit !== 'function' && (
+            <button
+              class={overwriteButtonClass || 'button'}
+              type="submit"
+              disabled={!this.state.canSubmit}
+            >
+              {submit.text}
+            </button>
+          )}
 
-          {this.props.customButtons}
+          {typeof customElement === 'function'
+            ? customElement(this.state.canSubmit, this.checkCanSubmit)
+            : customElement}
         </div>
       </form>
     );
   }
 }
 
-export default FormComponent;
+export default Form;
