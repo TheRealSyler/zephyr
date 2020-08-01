@@ -1,21 +1,21 @@
 import { h, FunctionComponent } from 'preact';
 import { Suspense, lazy } from 'preact/compat';
-interface AsyncRouteComponentProps {
+interface AsyncRouteProps {
   layout: FunctionComponent;
   component: () => Promise<{ default: any }>; // TODO: (low priority), find the type for any
 }
 
-const AsyncRouteComponent: FunctionComponent<AsyncRouteComponentProps> = props => {
+const AsyncRoute: FunctionComponent<AsyncRouteProps> = (props) => {
   const { component, layout: Layout } = props;
   const Component = lazy(component);
 
   return (
     <Layout>
       <Suspense fallback={<div></div>}>
-        <Component />
+        <Component {...props} />
       </Suspense>
     </Layout>
   );
 };
 
-export default AsyncRouteComponent;
+export default AsyncRoute;
