@@ -4,11 +4,15 @@ html
   --primary-bg-color: #2A2D31
   --primary-focus-bg-color: #40454b
   --secondary-bg-color: #18191B
-  --primary-font-color: #FFFFFF
+
+  --tertiary-bg-color: #111113
+
+  --primary-font-color: #eee
   --secondary-font-color: #C4C4C4
+
   --primary-color: #FF2266
   --secondary-color: #669999
-  --default-animation-length: 150ms
+
   --divider-color: #444
   --faint-color: #bbb
 
@@ -32,6 +36,9 @@ html
   --link-active-bg-color: #bee
 
   --nav-pos: 0px
+  --default-animation-length: 150ms
+  --max-article-width: 750px
+  --default-border-radius: 5px
 
 .primary-color
   color: var(--primary-color)
@@ -53,6 +60,8 @@ body
 
 // TODO link styling
 a
+  color: var(--link-bg-color)
+.link
   color: var(--link-bg-color)
   text-decoration: none
   transition: font-weight 200ms ease, color 200ms ease
@@ -98,8 +107,8 @@ $btnAndInpTransition: color 200ms ease, transform 150ms ease, border 200ms ease,
   box-sizing: border-box
   cursor: pointer
   font-size: 1rem
-
   transition: $btnAndInpTransition
+  outline: none
 
   &[disabled],
   &:hover[disabled],
@@ -115,6 +124,9 @@ $btnAndInpTransition: color 200ms ease, transform 150ms ease, border 200ms ease,
   &:active
     transform: scale(1)
     background: var(--button-active-bg-color)
+
+  &:focus
+    transform: scale(1.1)
 
 .content
   padding: 2rem
