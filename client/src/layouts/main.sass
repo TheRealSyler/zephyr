@@ -2,9 +2,7 @@
 
 .main-layout
   display: block
-  padding: 1rem
   padding-top: 3rem
-  .main-layout-content
 
 @media screen and ( min-width: $mobile-break  )
   .main-layout
@@ -26,3 +24,13 @@
   .main-layout
     .main-layout-content
       min-width: 1000px
+
+@media screen and ( min-width: $mobile-break + 600px  )
+  .main-layout
+    .main-layout-content
+      min-width: 1200px
+
+@media screen and ( min-width: $mobile-break + 800px  )
+  .main-layout
+    .main-layout-content
+      min-width: 1400px
