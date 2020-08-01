@@ -1,3 +1,6 @@
+//import css-variables from ../index.sass
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap')
 
 @mixin base-button
   background: inherit
@@ -17,3 +20,17 @@
   &:hover
     background: var(--primary-focus-bg-color)
     box-shadow: 0 0 5px #0006
+
+@mixin markdown
+  line-height: 1.4rem
+  img
+    max-width: 100%
+    background-size: cover
+  pre
+    padding: 1rem
+    border-radius: 5px
+    background: var(--primary-bg-color)
+    code
+      font-family: 'Roboto Mono', monospace
+  hr
+    color: var(--divider-color)
