@@ -1,0 +1,20 @@
+//import css-variables from ../index
+@import ../styles/utils
+
+.article-view
+  background: var(--secondary-bg-color)
+  border-radius: var(--default-border-radius)
+  padding: 2rem 3.5rem
+  max-width: var(--max-article-width)
+  margin: 0 auto
+  +markdown
+
+  &-info,
+  &-description
+    margin-top: 0.5rem
+    color: var(--faint-color)
+
+  &-title
+    color: var(--primary-color)
+    margin-bottom: 0
+    line-height: 2.4rem
