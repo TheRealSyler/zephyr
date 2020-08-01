@@ -1,14 +1,16 @@
 import { h, FunctionComponent } from 'preact';
 
-import Router, { route } from 'preact-router';
+import Router from 'preact-router';
 
-import AsyncRouteComponent from './components/asyncRoute';
+import AsyncRoute from './components/asyncRoute';
 import RedirectComponent from './components/redirect';
 import { POST } from './api';
 import { useState, useEffect } from 'preact/hooks';
 import MainLayout from './layouts/main';
 import AuthLayout from './layouts/auth';
 import { decodeAccessToken } from './auth';
+import Loading from './components/loading/loading';
+import EmptyLayout from './layouts/empty';
 
 interface AppProps {}
 
@@ -26,8 +28,6 @@ const App: FunctionComponent<AppProps> = () => {
         setTimeout(() => {
           refreshToken();
         }, timeToNextRefresh);
-      } else {
-        route('/login', true);
       }
     }
 
@@ -40,31 +40,64 @@ const App: FunctionComponent<AppProps> = () => {
     }
   }, [loading]);
 
+  // const Auth =  useContext(AuthData)
+
   return (
     <div
       /**DO NOT REMOVE why ?, because it hides the flickering when the page first loads. */
       class="start-animation"
     >
-      <Router>
-        <AsyncRouteComponent
-          path="/home"
-          layout={MainLayout}
-          component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
-        />
+      {loading ? (
+        <Loading />
+      ) : (
+        <Router>
+          <AsyncRoute
+            path="/home"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "HomeView"*/ './views/home')}
+          />
+          <AsyncRoute
+            path="/user/:user"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "user"*/ './views/user')}
+          />
+          <AsyncRoute
+            path="/article/:user/:name"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "article"*/ './views/article')}
+          />
+          <AsyncRoute
+            path="/newArticle"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "newArticle"*/ './views/newArticle')}
+          />
+          <AsyncRoute
+            path="/edit/article/:name"
+            layout={MainLayout}
+            component={() => import(/*webpackChunkName: "editArticle"*/ './views/editArticle')}
+          />
 
-        <AsyncRouteComponent
-          path="/login"
-          layout={AuthLayout}
-          component={() => import(/*webpackChunkName: "LoginView"*/ './views/login')}
-        />
-        <AsyncRouteComponent
-          path="/signUp"
-          layout={AuthLayout}
-          component={() => import(/*webpackChunkName: "signUpView"*/ './views/signUp')}
-        />
+          <AsyncRoute
+            path="/login"
+            layout={AuthLayout}
+            component={() => import(/*webpackChunkName: "LoginView"*/ './views/login')}
+          />
+          <AsyncRoute
+            path="/signUp"
+            layout={AuthLayout}
+            component={() => import(/*webpackChunkName: "signUpView"*/ './views/signUp')}
+          />
 
-        <RedirectComponent to="/home" default />
-      </Router>
+          <AsyncRoute
+            path="/:page*"
+            default
+            layout={EmptyLayout}
+            component={() => import(/*webpackChunkName: "notFound"*/ './views/notFound')}
+          />
+
+          <RedirectComponent to="/home" path="/"></RedirectComponent>
+        </Router>
+      )}
     </div>
   );
 };
