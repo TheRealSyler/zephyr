@@ -50,9 +50,10 @@ export interface POST {
     };
     response: SuccessResponse;
   };
-  article: {
+  'article/publish': {
     body: {
       name: string;
+      description?: string;
       content: string;
       title: string;
     };

@@ -16,6 +16,7 @@ export interface GET {
       user?: string;
       sort?: 'newest' | 'oldest';
       page?: string;
+      /**Results per page defaults to 10 */
       results?: string;
     };
   };
