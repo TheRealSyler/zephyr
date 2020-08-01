@@ -5,7 +5,9 @@ import { User } from 'src/entities/user.entity';
 export class Article extends BaseEntity {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column('text', { nullable: true }) content: string;
+  @Column('text') content: string;
+
+  @Column('text', { nullable: true }) description: string;
 
   @Column('varchar', { length: 255 }) name: string;
 

@@ -9,12 +9,15 @@ import { SuccessResponse } from 'src/shared/api.response.success';
 import { urlFriendly } from 'src/shared/utils';
 import { DELETE } from 'src/shared/api.DELETE';
 import { Clamp } from 'src/shared/utils.math';
+import { Article as CleanArticle } from '../shared/api.interfaces';
+import { createObjectFromArray, convertToUtf8 } from 'src/utils/utils';
 
 /**Fields that are allowed to be edited by the user. */
-const allowedEdits: Partial<Article> = {
-  content: null,
-  title: null
-};
+const allowedEdits = createObjectFromArray<(keyof Partial<Article>)[], Partial<Article>>([
+  'content',
+  'description',
+  'title'
+]);
 
 @Controller('article')
 export class ArticleController {
@@ -25,10 +28,10 @@ export class ArticleController {
     const { name, user, page, results, sort = 'newest' } = req.query;
     const USER = await User.findOne({ where: { username: user }, select: ['id'] });
 
+    if (user && !USER) {
+      throw new BadRequestException(`User ${user} doesn't exist.`);
+    }
     if (user && name) {
-      if (!USER) {
-        throw new BadRequestException(`User ${user} doesn't exist.`);
-      }
       const article = await Article.findOne({
         where: { createdBy: USER, name },
         relations: ['createdBy']
@@ -72,12 +75,12 @@ export class ArticleController {
     throw new BadRequestException();
   }
 
-  @Post()
+  @Post('/publish')
   @UseGuards(AuthGuard)
   async createArticle(
-    @Req() req: AuthRequest<POST['article']['body']>
-  ): Promise<POST['article']['response']> {
-    const { content, title, name } = req.body;
+    @Req() req: AuthRequest<POST['article/publish']['body']>
+  ): Promise<POST['article/publish']['response']> {
+    const { content, title, name, description } = req.body;
 
     if (!urlFriendly(name)) {
       throw new BadRequestException(`Name ${name} is not url friendly.`);
@@ -89,9 +92,10 @@ export class ArticleController {
       const article = await Article.findOne({ where: { createdBy: user, name } });
       if (!article) {
         const newArticle = Article.create({
-          content,
-          title,
-          name,
+          content: convertToUtf8(content),
+          title: convertToUtf8(title),
+          name: convertToUtf8(name),
+          description: convertToUtf8(description),
           changed: new Date(),
           created: new Date(),
           createdBy: user
@@ -116,17 +120,20 @@ export class ArticleController {
     const username = req.token.username;
     const user = await User.findOne({ where: { username }, select: ['id'] });
     if (edits && user) {
-      const article = await Article.findOne({ where: { createdBy: user, name } });
+      const editedFields = [];
+      const article = await Article.findOne({ where: { createdBy: user, name }, select: ['id'] });
       if (article) {
         for (const key in edits) {
           if (key in allowedEdits && edits.hasOwnProperty(key)) {
             const edit = edits[key];
-            article[key] = edit;
+            editedFields.push(key);
+
+            article[key] = convertToUtf8(edit);
           }
         }
         article.changed = new Date();
         await article.save();
-        return new SuccessResponse();
+        return new SuccessResponse(`Edited: ${editedFields}`);
       }
 
       throw new BadRequestException(`Article ${username}/${name} doesn't exist.`);
@@ -134,10 +141,11 @@ export class ArticleController {
     throw new BadRequestException('No Edits Provided');
   }
 }
-function getCleanArticle(article: Article) {
+function getCleanArticle(article: Article): CleanArticle {
   return {
     title: article.title,
     content: article.content,
+    description: article.description,
     name: article.name,
     changed: article.changed,
     created: article.created,
