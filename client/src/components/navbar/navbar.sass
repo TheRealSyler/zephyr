@@ -84,10 +84,10 @@ $nav-transition-time: 200ms
     height: 25px
     top: 0
     left: 0
-    +base-button
-
     line-height: 25px
     font-size: 25px
+
+    +base-button
 
     &.active
       pointer-events: all
@@ -101,10 +101,10 @@ $nav-transition-time: 200ms
 
 .nav-show-close
   transform: translateY(11px)
-  +nav-show-close
 
   position: relative
   background: var(--primary-font-color)
+  +nav-show-close
   &::before
     transition: transform $nav-transition-time ease
     content: ' '

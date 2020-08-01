@@ -1,9 +1,10 @@
 import { h, Component } from 'preact';
 import './navbar.sass';
 
-import NavbarItemComponent from './navbarItem';
-import { LogOut } from '../../auth';
+import NavbarItem from './navbarItem';
 import { Clamp } from '../../shared/utils.math';
+import { POST } from '../../api';
+import { AuthData } from '../../auth';
 
 interface NavbarComponentProps {}
 interface NavbarComponentState {
@@ -20,7 +21,7 @@ interface AnimateLoopParams {
   startPos: number;
 }
 
-class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentState> {
+class Navbar extends Component<NavbarComponentProps, NavbarComponentState> {
   maxPos = 0;
   minPos = -200;
   maxAnimTime = 120;
@@ -126,6 +127,10 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
     }
   };
 
+  public get loggedIn(): boolean {
+    return !!AuthData.accessToken;
+  }
+
   render() {
     return (
       <nav class={this.state.isHidden ? 'nav hidden' : 'nav'}>
@@ -147,26 +152,37 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
             >
               <div class={this.state.isHidden ? 'nav-show-close' : 'nav-show-close active'}></div>
             </div>
+            <div class="spacer"></div>
+            <a
+              style="text-decoration: none"
+              class="nav-btn"
+              href={AuthData.accessToken ? `/user/${AuthData.accessToken.username}` : ''}
+              title={AuthData.accessToken?.username}
+            >
+              {AuthData.accessToken?.username}
+            </a>
           </div>
 
           <div class="nav-line"></div>
-          <NavbarItemComponent icon="home" text="Home" link="/home" />
-          <NavbarItemComponent icon="list" text="List" link="/list" />
-
+          <NavbarItem icon="home" text="Home" link="/home" />
+          {this.loggedIn && <NavbarItem icon="edit" text="Write Article" link="/newArticle" />}
           <div class="spacer"></div>
-          <NavbarItemComponent
+          <NavbarItem
             icon="github"
             text="Source Code"
             link="https://github.com/TheRealSyler/zephyr"
           />
-
-          <NavbarItemComponent
-            icon="logout"
-            flipIconX={true}
-            text="Logout"
-            onClick={LogOut}
-            link="/logout"
-          />
+          {AuthData.accessToken ? (
+            <NavbarItem
+              icon="logout"
+              flipIconX={true}
+              text="Logout"
+              onClick={this.Logout}
+              link="/home"
+            />
+          ) : (
+            <NavbarItem icon="logout" text="Login" link="/login" />
+          )}
 
           <div class="nav-spacer-small"></div>
         </div>
@@ -183,6 +199,12 @@ class NavbarComponent extends Component<NavbarComponentProps, NavbarComponentSta
       </nav>
     );
   }
+  Logout = async () => {
+    AuthData.accessToken = null;
+    AuthData.rawAccessToken = null;
+    await POST('auth/logout');
+    this.forceUpdate();
+  };
 }
 
-export default NavbarComponent;
+export default Navbar;
