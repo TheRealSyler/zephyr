@@ -1,0 +1,18 @@
+FROM node:13-alpine
+
+RUN mkdir -p /app/.cache/yarn && chmod 777 /app/.cache/yarn
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+ENV HOME=/app
+WORKDIR $HOME
+
+COPY ./server .
+COPY ./shared ./src/shared
+
+EXPOSE ${PORT}
+
+RUN yarn build
+
+USER node
+
+CMD ["yarn", "start:prod"]

@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  # TODO add web/client ?
+  # web:
+  #   container_name: zephyr-web
+  #   build: ./web.Dockerfile
+  #   ports:
+  #     - '${WEB_PORT}:${WEB_PORT}'
+  #   depends_on:
+  #     - server
+  server:
+    container_name: zephyr-server
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    env_file: .env
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - mysql
+  mysql:
+    container_name: zephyr-db
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - '${MYSQL_PORT}:${MYSQL_PORT}'
