@@ -17,13 +17,13 @@ import { ArticleModule } from './article/article.module';
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_ROOT_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      synchronize: true,
+      // synchronize: true,
       autoLoadEntities: true,
-      entities: ['dist/**/*.entity{.ts,.js}']
-      // migrations: ['migration/*.ts'],
-      // cli: {
-      //   migrationsDir: 'migration'
-      // }
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      migrations: ['migration/*.ts'],
+      cli: {
+        migrationsDir: 'migration'
+      }
     }),
     AuthModule,
     UserModule,
