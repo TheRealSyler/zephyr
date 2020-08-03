@@ -4,8 +4,8 @@ import querystring from 'querystring';
 import { AuthData } from './auth';
 import { DELETE } from './shared/api.DELETE';
 
-const apiUrlBase = 'http://localhost:3000/';
-
+const apiUrlBase = process.env.BASE_API_URL || 'http://localhost:3000/';
+console.log('BASE API URL', apiUrlBase);
 interface Response<T> {
   status: number;
   body: T;

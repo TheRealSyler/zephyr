@@ -9,31 +9,31 @@ interface C extends Dev, Configuration {}
 
 const config: C = {
   entry: {
-    index: `${__dirname}/src/index.tsx`
+    index: `${__dirname}/src/index.tsx`,
   },
   output: {
     path: resolve(__dirname, 'dist'),
     chunkFilename: '[name].chunk.js',
     filename: '[name].bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: `${__dirname}/public/index.html`
+      template: `${__dirname}/public/index.html`,
     }),
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin(),
     // new WebpackBundleAnalyzer.BundleAnalyzerPlugin()
   ],
   module: {
     rules: [
       {
         test: /\.s[ac]ss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.tsx?$/,
@@ -41,34 +41,34 @@ const config: C = {
           {
             loader: 'ts-loader',
             options: {
-              transpileOnly: true
-            }
-          }
+              transpileOnly: true,
+            },
+          },
         ],
-        exclude: [/node_modules/]
-      }
-    ]
+        exclude: [/node_modules/],
+      },
+    ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       react: 'preact/compat',
       'react-dom/test-utils': 'preact/test-utils',
-      'react-dom': 'preact/compat'
-    }
+      'react-dom': 'preact/compat',
+    },
   },
   devServer: {
     historyApiFallback: true,
     allowedHosts: ['localhost'],
-    publicPath: '/'
+    publicPath: '/',
   },
   optimization: {
     // minimize: false,
     splitChunks: {
       chunks: 'all',
-      minSize: 2000
-    }
-  }
+      minSize: 2000,
+    },
+  },
 };
 
 module.exports = config;

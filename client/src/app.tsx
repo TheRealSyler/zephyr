@@ -20,15 +20,19 @@ const App: FunctionComponent<AppProps> = () => {
   const [loading, setLoading] = useState(true);
 
   const refreshToken = async () => {
-    const res = await POST('auth/refreshToken');
-    if (res.status === 200) {
-      const payload = decodeAccessToken(res.body.accessToken);
-      if (payload) {
-        const timeToNextRefresh = payload.exp! * 1000 - Date.now() - 1000;
-        setTimeout(() => {
-          refreshToken();
-        }, timeToNextRefresh);
+    try {
+      const res = await POST('auth/refreshToken');
+      if (res.status === 200) {
+        const payload = decodeAccessToken(res.body.accessToken);
+        if (payload) {
+          const timeToNextRefresh = payload.exp! * 1000 - Date.now() - 1000;
+          setTimeout(() => {
+            refreshToken();
+          }, timeToNextRefresh);
+        }
       }
+    } catch {
+      // TODO display error message
     }
 
     setLoading(false);
