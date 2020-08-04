@@ -3,7 +3,7 @@ import { Configuration as Dev } from 'webpack-dev-server';
 const resolve = require('path').resolve;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-import Dotenv from 'dotenv-webpack';
+const Dotenv = require('dotenv-webpack');
 // const WebpackBundleAnalyzer = require('webpack-bundle-analyzer');
 
 interface C extends Dev, Configuration {}
