@@ -1,6 +1,4 @@
 import { h, FunctionComponent } from 'preact';
-import { config } from 'dotenv';
-config();
 import Router from 'preact-router';
 
 import AsyncRoute from './components/asyncRoute';
