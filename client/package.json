@@ -6,8 +6,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": " webpack-dev-server",
-    "build": "del ./dist && webpack --mode production"
+    "start": "webpack-dev-server",
+    "build": "node ../scripts/createEnvFile.js && del ./dist && webpack --mode production"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
