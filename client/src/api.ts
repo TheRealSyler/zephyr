@@ -5,8 +5,7 @@ import { AuthData } from './auth';
 import { DELETE } from './shared/api.DELETE';
 
 const apiUrlBase = process.env.BASE_API_URL || 'http://localhost:3000/';
-console.log('ENV', process.env);
-console.log('BASE API URL', apiUrlBase);
+
 interface Response<T> {
   status: number;
   body: T;
