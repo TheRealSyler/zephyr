@@ -17,9 +17,11 @@ const color = (text, color = 'green') =>
 
 if (!fs.existsSync('./.env') && process && process.env) {
   const { env } = process
+  console.log(env)
   fs.writeFileSync('./.env', Object.keys(env).reduce((acc, key) => {
     const val = env[key]
     acc += `${key}=${val}\n`
+    return acc
   }, ''))
   console.log(color('created .env file'))
 } else {
