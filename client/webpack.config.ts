@@ -4,6 +4,7 @@ const resolve = require('path').resolve;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 // const WebpackBundleAnalyzer = require('webpack-bundle-analyzer');
 
 interface C extends Dev, Configuration {}
@@ -20,6 +21,9 @@ const config: C = {
   },
 
   plugins: [
+    new CopyPlugin({
+      patterns: [{ from: './public/_redirects', to: '.' }],
+    }),
     new Dotenv(),
     new HtmlWebpackPlugin({
       template: `${__dirname}/public/index.html`,
