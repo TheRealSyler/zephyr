@@ -23,6 +23,7 @@ export async function GET<K extends keyof GET>(
   path: K,
   query?: GET[K]['query']
 ): Promise<Response<GET[K]['response']>> {
+  console.log('GET', `${apiUrlBase}${path}${query ? '?' + querystring.stringify(query) : ''}`);
   const headers: Headers = [];
   addAuthHeader(AuthData.rawAccessToken, headers);
 
@@ -45,7 +46,7 @@ export async function POST<K extends keyof POST>(
 ): Promise<Response<POST[K]['response']>> {
   const headers: Headers = [['Content-Type', 'application/json']];
   addAuthHeader(AuthData.rawAccessToken, headers);
-
+  console.log('POST', `${apiUrlBase}${path}`);
   const res = await fetch(`${apiUrlBase}${path}`, {
     method: 'POST',
     body: JSON.stringify(body || {}),
