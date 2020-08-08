@@ -72,7 +72,6 @@ const config: C = {
     // minimize: false,
     splitChunks: {
       chunks: 'all',
-      minSize: 2000,
     },
   },
 };

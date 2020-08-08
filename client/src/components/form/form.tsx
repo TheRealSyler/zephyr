@@ -7,6 +7,7 @@ interface Field {
   placeholder?: string;
   type?: string;
   name?: string;
+  disabled?: boolean;
   required?: boolean;
   /**Return an empty array if the field is valid. */
   validate?: (text: string) => string[];
@@ -181,6 +182,7 @@ class Form<T extends FormFields> extends Component<FormProps<T>, FormState<T>> {
 
         const input = (
           <input
+            title={fieldProps.placeholder}
             {...fieldProps}
             placeholder={`${fieldProps.placeholder}${fieldProps.required ? ' *' : ''}`}
             ref={focus === key ? this.focus : undefined}

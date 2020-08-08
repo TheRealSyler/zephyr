@@ -68,6 +68,7 @@ const EditArticle: FunctionComponent<EditArticleProps> = ({
           name: 'name',
           placeholder: 'Name (for the url)',
           required: true,
+          disabled: isEditing,
           value: initialData?.name || '',
           type: 'text',
           validate: (val) => {

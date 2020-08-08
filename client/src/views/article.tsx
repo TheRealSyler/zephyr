@@ -44,7 +44,6 @@ const ArticleView: FunctionComponent<ArticleViewProps> = (props) => {
             </a>
             <a
               class="link ml-1"
-              href={`/delete/${name}`}
               onClick={async () => {
                 await DELETE('article', { name });
                 route(`/user/${user}`);
