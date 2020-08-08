@@ -4,8 +4,7 @@ import {
   Column,
   BeforeInsert,
   BaseEntity,
-  OneToMany,
-  ManyToOne
+  OneToMany
 } from 'typeorm';
 import { hash } from 'argon2';
 

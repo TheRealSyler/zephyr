@@ -1,11 +1,18 @@
 {
   "scripts": {
-    "start": "concurrently \"cd server && yarn start:dev\" \"cd client && yarn start\"",
-    "postinstall": "cd server && yarn && cd ../client && yarn",
-    "build:client": "yarn && cd client && yarn build"
+    "start": "docker-compose up -d && concurrently \"cd server && yarn start:dev\" \"cd client && yarn start\"",
+    "postinstall": "test -n \"$NO_YARN_POSTINSTALL\" || yarn run post:install",
+    "post:install": "cd server && yarn && cd ../client && yarn",
+    "build:server": "cd server && yarn build",
+    "push:server": "docker build . -t web && heroku container:push web && heroku container:release web"
   },
   "dependencies": {
-    "concurrently": "^5.1.0",
     "suf-password": "^0.7.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "@types/node": "^14.0.27",
+    "typescript": "^3.9.7"
   }
 }

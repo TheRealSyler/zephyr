@@ -14,6 +14,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT, () => console.log('PORT:', process.env.PORT));
 }
 bootstrap();

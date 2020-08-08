@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "del ./dist && nest start --watch",
+    "start:dev": "del ./dist && MODE=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -36,7 +36,6 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
-    "suf-password": "^0.6.1",
     "typeorm": "^0.2.24",
     "uuid": "^7.0.2"
   },
@@ -61,7 +60,6 @@
     "supertest": "^4.0.2",
     "ts-jest": "25.2.0",
     "ts-loader": "^6.2.1",
-    "ts-node": "^8.6.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.4"
   },
