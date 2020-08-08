@@ -87,7 +87,8 @@ export class AuthService {
     res.cookie('jid', token, {
       httpOnly: true,
       path: '/auth/refreshToken',
-      sameSite: 'strict'
+      sameSite: 'none',
+      secure: true
     });
   }
 
