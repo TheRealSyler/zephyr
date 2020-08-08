@@ -1,12 +1,9 @@
 import marked from 'marked';
-import sanitizeHtml from 'sanitize-html';
+import DOMPurify from 'dompurify';
 
 export function Sanitize(text: string) {
   // return marked(text);
-  return sanitizeHtml(marked(text), {
-    allowedTags: htmlTags,
-    allowedAttributes: allowedAttributes,
-  });
+  return DOMPurify.sanitize(marked(text));
 }
 
 const htmlAttributes = [
