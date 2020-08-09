@@ -27,6 +27,7 @@ const config: C = {
     new Dotenv(),
     new HtmlWebpackPlugin({
       template: `${__dirname}/public/index.html`,
+      favicon: `${__dirname}/public/favicon.png`,
     }),
     new ForkTsCheckerWebpackPlugin(),
     // new WebpackBundleAnalyzer.BundleAnalyzerPlugin()
