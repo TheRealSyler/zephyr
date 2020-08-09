@@ -2,7 +2,7 @@ import { h, FunctionComponent, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Article } from '../shared/api.interfaces';
 import { GET } from '../api';
-import ShowArticles from '../components/showArticles';
+import ShowArticle from '../components/showArticle';
 
 interface UserViewProps {
   user: string;
@@ -26,7 +26,7 @@ const UserView: FunctionComponent<UserViewProps> = (props) => {
   return (
     <Fragment>
       <div style="font-size: 4rem; color: var(--primary-color)">{user}</div>
-      <ShowArticles articles={data} />
+      <ShowArticle articles={data} />
     </Fragment>
   );
 };

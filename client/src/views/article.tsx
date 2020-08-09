@@ -7,6 +7,7 @@ import './article.sass';
 import { AuthData } from '../auth';
 import { route } from 'preact-router';
 import { Sanitize } from '../utils/utils';
+import { apiCache } from '../cache';
 interface ArticleViewProps {
   user: string;
   name: string;
@@ -16,10 +17,14 @@ const ArticleView: FunctionComponent<ArticleViewProps> = (props) => {
   const { user, name } = props;
   const [data, setData] = useState<Article | null>(null);
   const getData = async () => {
-    const body = (await GET('article', { user, name })).body as Article;
-
     if (data === null) {
-      setData(body);
+      const newData = await apiCache.fetch(
+        'article',
+        `${user}/${name}`,
+        async () => (await GET('article', { user, name })).body as Article
+      );
+
+      setData(newData);
     }
   };
   useEffect(() => {
@@ -59,7 +64,7 @@ const ArticleView: FunctionComponent<ArticleViewProps> = (props) => {
       <div
         class="mt-2"
         dangerouslySetInnerHTML={{
-          __html: Sanitize(data ? data.content : ''),
+          __html: Sanitize(data?.content ? data.content : ''),
         }}
       ></div>
     </div>

@@ -1,5 +1,38 @@
 import marked from 'marked';
 import DOMPurify from 'dompurify';
+import { useState, useEffect, StateUpdater } from 'preact/hooks';
+import { RefObject } from 'preact';
+
+function isInViewPort(rect: DOMRect) {
+  if (
+    window.screen.height >= rect.bottom &&
+    window.screen.width >= rect.right &&
+    rect.top >= 0 &&
+    rect.left >= 0
+  )
+    return true;
+  return false;
+}
+
+export function useScreenEnter(ref: RefObject<HTMLElement>, callback: () => void) {
+  const [entered, setEntered] = useState(false);
+
+  const isInView = () => {
+    return ref.current && isInViewPort(ref.current.getBoundingClientRect());
+  };
+
+  const activate = () => {
+    if (isInView() && !entered) {
+      callback();
+      setEntered(true);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('scroll', activate);
+    return () => document.removeEventListener('scroll', activate);
+  });
+  return setEntered;
+}
 
 export function Sanitize(text: string) {
   // return marked(text);
