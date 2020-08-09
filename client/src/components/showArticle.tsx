@@ -6,7 +6,7 @@ interface ShowArticlesProps {
   articles: Article[] | null;
 }
 
-const ShowArticles: FunctionComponent<ShowArticlesProps> = (props) => {
+const ShowArticle: FunctionComponent<ShowArticlesProps> = (props) => {
   const { articles } = props;
 
   return (
@@ -29,4 +29,4 @@ const ShowArticles: FunctionComponent<ShowArticlesProps> = (props) => {
   );
 };
 
-export default ShowArticles;
+export default ShowArticle;
