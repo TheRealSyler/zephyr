@@ -51,10 +51,10 @@ export class ArticleController {
       order: { created: createdOrder },
       take,
       skip,
-      select: ['changed', 'createdBy', 'created', 'title', 'name', 'description'],
+
       relations: ['createdBy']
     });
-    return articles.map(a => getCleanArticle(a));
+    return articles.map(a => getCleanArticle(a, false));
   }
 
   @Delete()
@@ -142,10 +142,10 @@ export class ArticleController {
     throw new BadRequestException('No Edits Provided');
   }
 }
-function getCleanArticle(article: Article): CleanArticle {
+function getCleanArticle(article: Article, content = true): CleanArticle {
   return {
     title: article.title,
-    content: article.content,
+    content: content ? article.content : null,
     description: article.description,
     name: article.name,
     changed: article.changed,
