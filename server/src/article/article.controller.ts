@@ -51,6 +51,7 @@ export class ArticleController {
       order: { created: createdOrder },
       take,
       skip,
+      select: ['changed', 'createdBy', 'created', 'title', 'name', 'description'],
       relations: ['createdBy']
     });
     return articles.map(a => getCleanArticle(a));
