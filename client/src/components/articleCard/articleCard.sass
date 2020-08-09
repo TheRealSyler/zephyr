@@ -1,8 +1,5 @@
 //import css-variables from ../../index
 
-$a: #434850
-$b: #73849e
-
 .article-card
   color: var(--primary-font-color)
   text-decoration: none
@@ -10,15 +7,19 @@ $b: #73849e
   &:hover
     .article-card
       &-title
-        transform: skewX(25deg) scale(1.1)
+        background: var(--primary-focus-bg-color)
+
+      &-description
+        background: var(--tertiary-focus-bg-color)
 
   &-title
-    transition: transform var(--default-animation-length) ease
+    transition: background-color var(--default-animation-length) ease
     transform: skewX(25deg)
     background: var(--secondary-bg-color)
     font-size: 1.4rem
-
+    border-radius: 5px
     color: var(--primary-color)
+    z-index: 200
     box-shadow: 0 4px 5px #0003
     > *
       max-height: 5.8rem
@@ -32,15 +33,16 @@ $b: #73849e
       transform: skewX(-25deg)
 
   &-description
+    transition: background-color var(--default-animation-length) ease
     overflow: auto
     text-overflow: ellipsis
 
     padding: 1rem
-    margin: 0 25px
-    margin-left: 50px
+    margin: 0 15px
+    margin-left: 25px
     margin-top: -10px
     padding-top: 20px
     color: var(--faint-color)
     background: var(--tertiary-bg-color)
     height: 4rem
-    border-radius: 0 0 2px 2px
+    border-radius: 0 0 3px 3px

@@ -173,13 +173,7 @@ class Navbar extends Component<NavbarComponentProps, NavbarComponentState> {
             link="https://github.com/TheRealSyler/zephyr"
           />
           {AuthData.accessToken ? (
-            <NavbarItem
-              icon="logout"
-              flipIconX={true}
-              text="Logout"
-              onClick={this.Logout}
-              link="/home"
-            />
+            <NavbarItem icon="logout" flipIconX={true} text="Logout" onClick={this.Logout} />
           ) : (
             <NavbarItem icon="logout" text="Login" link="/login" />
           )}
