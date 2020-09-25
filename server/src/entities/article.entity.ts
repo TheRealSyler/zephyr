@@ -13,8 +13,8 @@ export class Article extends BaseEntity {
 
   @Column('varchar', { length: 255 }) title: string;
 
-  @Column('datetime') created: Date;
-  @Column('datetime') changed: Date;
+  @Column('date') created: Date;
+  @Column('date') changed: Date;
 
   @ManyToOne(
     type => User,

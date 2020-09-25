@@ -32,7 +32,7 @@
     "cookie-parser": "^1.4.4",
     "del-cli": "^3.0.0",
     "helmet": "^3.21.3",
-    "mysql": "^2.18.1",
+    "pg": "^8.3.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
