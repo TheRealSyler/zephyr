@@ -12,7 +12,7 @@ const SignUpView: FunctionComponent<SignUpViewProps> = () => {
         class="mb-1 mt-15"
         style={{ textAlign: 'center', color: 'var(--primary-color)', fontSize: '1.4rem' }}
       >
-        SING UP
+        SIGN UP
       </div>
       <Form
         focus={'username'}
